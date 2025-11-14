@@ -21,7 +21,7 @@ clause on the \kcode{task} construct.
 
 The program will always print \pout{x = 2}, because the \kcode{depend} 
 clauses enforce the ordering of the tasks. If the \kcode{depend} clauses had been 
-omitted, then the tasks could execute in any order and the program and the program 
+omitted, then the tasks could execute in any order and the program
 would have a race condition.
 
 \subsection{Anti-dependence}
@@ -97,8 +97,8 @@ statement from task T4.
 \index{task dependences!matrix multiplication}
 
 This example shows a task-based blocked matrix multiplication. Matrices are of 
-\ucode{N}x\ucode{N} elements, and the multiplication is implemented using blocks
-of \ucode{BS}x\ucode{BS} elements.
+\ucode{N$\times$N} elements, and the multiplication is implemented using blocks
+of \ucode{BS$\times$BS} elements.
 
 \cexample[4.0]{task_dep}{5}
 
@@ -148,11 +148,11 @@ the first child is produced by \ucode{x} with the \kcode{in} dependence type
 in the \kcode{depend} clause of the second task.
 However, the generating task at the first \kcode{taskwait} waits only on the
 first child task to complete, because a dependence on only the first child task
-is produced by \ucode{x} with an \kcode{in} dependence type within the
+is produced by \ucode{x} with an \kcode{in} dependence type in the
 \kcode{depend} clause of the \kcode{taskwait} construct.
 The second \kcode{taskwait} (without a \kcode{depend} clause) is included
 to guarantee completion of the second task before \ucode{y} is accessed.
-(While unnecessary, the \kcode{depend(inout: \ucode{y})} clause on the 2nd child task is
+(While unnecessary, the \kcode{depend(inout: \ucode{y})} clause on the second child task is
 included to illustrate how the child task dependences can be completely annotated
 in a data-flow model.)
 
@@ -172,11 +172,8 @@ wait on completion of any child task having \ucode{y} with an \kcode{out}
 (here \kcode{inout}) dependence type in its \kcode{depend} clause.
 So, the \kcode{depend} clause of the \kcode{taskwait} construct now constrains
 the second task to complete at the taskwait, too.
-%--both tasks must now complete execution at the \code{taskwait}. 
-(This change makes the second taskwait of the previous example unnecessary--
-it has been removed in this example.)
 
-Note: While a \kcode{taskwait} construct ensures that all child tasks have completed; a depend clause on a \kcode{taskwait}
+Note: While a \kcode{taskwait} construct ensures that all child tasks have completed; a \kcode{depend} clause on a \kcode{taskwait}
 construct only waits for specific child tasks (prescribed by the dependence type and list
 items in the \kcode{taskwait}'s \kcode{depend} clause).
 This and the previous example illustrate the need to carefully determine
@@ -280,7 +277,7 @@ Thus, the program will always print \pout{x = 2}.
 \ffreeexample[4.0]{task_dep}{12}
 
 
-In OpenMP 5.1 the \kcode{omp_all_memory} \plc{reserved locator} was introduced
+In OpenMP 5.1 the \kcode{omp_all_memory} \emph{reserved locator} was introduced
 to specify storage of all objects in memory. In the following example,
 it is used in Task 4 as a convenient way to specify that the locator
 (list item) denotes the storage of all objects (locations) in memory, and 
@@ -296,9 +293,37 @@ scheduled to execute at any time, with no ordering.
 \subsection{Transparent Task Dependences}
 \label{subsec:depend_trans_task}
 \index{task dependences!transparent tasks}
+\index{transparent clause@\kcode{transparent} clause}
+\index{clauses!transparent@\kcode{transparent}}
+\index{OpenMP identifiers!omp_import@\kcode{omp_import}}
+\index{OpenMP identifiers!omp_export@\kcode{omp_export}}
+\index{OpenMP identifiers!omp_impex@\kcode{omp_impex}}
 
+Dependences of child tasks of a task can be exposed by specifying 
+the task as a \emph{transparent task} with the 
+\kcode{transparent(\plc{impex-type})} clause.
+The \plc{impex-type} argument indicates that the task is 
+an importing (\kcode{omp_import}), exporting (\kcode{omp_export}),
+or both importing and exporting (\kcode{omp_impex}) task.
+For the purposes of dependence matching, an importing task is 
+one that makes its preceding tasks (such as earlier
+sibling tasks) visible to its child tasks and an exporting task
+is one that makes its child tasks visible to its successors.
+The default is \kcode{omp_impex} if the argument is not explicitly specified.
 
-In the following example, each iteration of the \ucode{h}-loop updates all
+In the following example, task T2 is specified as a transparent task
+with the \kcode{transparent} clause. This makes the dependence on
+variable \ucode{x} from task T1 visible to task T3 (importing) and 
+the dependence on variable \ucode{x} from task T3 visible to task T4
+(exporting).  Without the \kcode{transparent} clause on T2, T3 would not
+wait on T1, T4 would not wait on T3, and the value of \ucode{x} in T4 
+would be undefined due to race condition.
+
+\cexample[6.0]{task_dep}{14}
+\ffreeexample[6.0]{task_dep}{14}
+
+In the following example,
+each iteration of the \ucode{h}-loop updates all
 elements of array \ucode{M} and task dependences are used to synchronize
 updates across different iterations of the loop. The code uses two levels of
 dependent tasks and assumes that
@@ -311,16 +336,11 @@ the \kcode{depend} clause serializing their execution and each task calling
 However, the dependences for this second level of tasks are between tasks from
 different calls to \ucode{my_func}. In order to enforce these dependences, the
 first-level tasks are specified as transparent tasks with the
-\kcode{transparent(omp_impex)} clause. The \kcode{omp_impex} argument (which
-is the default if not explicitly specified) indicates that the task is both an
-exporting and importing task. For the purposes of dependence matching, an
-exporting task is one that makes its child tasks visible to its successors and
-an importing task is one that makes its preceding tasks (such as earlier
-sibling tasks) visible to its child tasks. As a result of the exposed
+\kcode{transparent(omp_impex)} clause.  As a result of the exposed
 dependences, the task generated in the $i^{th}$ iteration of the
-\ucode{h}=$h_0$ instance of \ucode{my_func} is guaranteed to be ordered before
-the task generated in the $i^{th}$ iteration of the \ucode{h}=$h_1$ instance of
+\ucode{h}~=~$h_0$ instance of \ucode{my_func} is guaranteed to be ordered before
+the task generated in the $i^{th}$ iteration of the \ucode{h}~=~$h_1$ instance of
 \ucode{my_func}, where $h_0 < h_1$.
 
-\cexample[6.0]{task_dep}{14}
-\ffreeexample[6.0]{task_dep}{14}
+\cexample[6.0]{task_dep}{15}
+\ffreeexample[6.0]{task_dep}{15}

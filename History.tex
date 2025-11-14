@@ -2,6 +2,66 @@
 \label{chap:history}
 
 %=====================================
+\section{Changes from 6.0 to 6.0.1}
+\label{sec:history_60_to_601}
+
+\begin{itemize}
+\item Added the following examples for the 6.0 features:
+\begin{itemize}
+  \item Compound directive names (\specref{sec:compound})
+  \item Updated OpenMP Affinity section to include affinity policy for free-agent threads
+    (\specref{sec: affinity_policies})
+  \item More transparent task examples
+    (\specref{subsec:depend_trans_task})
+  \item Tasking examples using free-agent threads (\specref{sec:free_agent})
+  \item \kcode{taskgraph} construct for replay execution of taskgraph records.
+    (\specref{sec:taskgraph})
+  \item \kcode{self} modifier for the \kcode{map} clause to require self mapping
+    (\specref{sec:self_mapping})
+  \item \kcode{target_data} as a composite directive 
+    (\specref{subsec:composite_target_data})
+  \item \kcode{declare_target} directive with \kcode{local} clause 
+    (\specref{subsec:declare_target_local})
+   \item \kcode{workdistribute} construct with \kcode{target teams} construct 
+    (\specref{sec:target_teams_workdistribute})
+  \item \kcode{stripe} construct for changing the order of logical
+    iterations of a loop nest (\specref{sec:stripe})
+  \item \kcode{split} construct for loop splitting into multiple loops
+    (\specref{sec:split})
+  \item \kcode{fuse} construct for loop fusion (\specref{sec:fuse})
+  \item Atomic compare-and-swap examples in Fortran
+    (\specref{sec:cas})
+  \item \kcode{safesync} clause for synchronization requirements within
+    a thread team (\specref{sec:safesync})
+  \item \kcode{groupprivate} directive for groupprivate variables
+    (\specref{sec:groupprivate})
+  \item \kcode{novariants} and \kcode{nocontext} clauses on
+    \kcode{dispatch} construct (\specref{sec:dispatch})
+\end{itemize}
+
+\item Other changes:
+\begin{itemize}
+  \item Removed the \kcode{atomic update} directive that is not necessary
+    in Example \example{workshare.3.f} (\specref{sec:workshare}).
+  \item Updated text and examples that cover pointer attachment and pointer
+    initialization for devices. Renamed \docref{Pointer Mapping} section
+    to \docref{Pointer Initialization for Devices}
+    (\specref{sec:pointer_mapping}).
+  \item Fixed a logical condition test in checking the \kcode{user} trail
+    for \kcode{metadirective} in Example \example{target_ptr_map.5.f90}
+    (\specref{sec:pointer_mapping})
+  \item Changed to use the underscore form of directive names for the 6.0
+    examples. This effectively fixed the incorrect use of an undefined 
+    \kcode{declare induction} for \kcode{declare_induction}
+    (\specref{subsec:user-defined-induction}).
+  \item Replaced the use of deprecated Fortran include file \bcode{omp_lib.h}
+    with Fortran module \bcode{omp_lib} in a number of examples
+    (\nspecref{Table}{tab:Updated Examples 6.0})
+\end{itemize}
+
+\end{itemize}
+
+%=====================================
 \section{Changes from 5.2.2 to 6.0}
 \label{sec:history_522_to_60}
 
@@ -113,14 +173,13 @@
   \item Clarified the mapping of virtual functions in \kcode{target} regions
     (\specref{sec:virtual_functions})
   \item Added missing \kcode{declare target} directive for procedures
-    called inside \kcode{target} region in \example{Examples} 
+    called inside \kcode{target} region in Examples
     \example{declare_mapper.1.f90} (\specref{sec:declare_mapper}),
     \example{target_reduction.*.f90} (\specref{subsec:target_reduction}), 
     and \example{target_task_reduction.*.f90}
     (\specref{subsec:target_task_reduction})
-  \item Added missing \kcode{end target} directive in 
-    \example{Example declare_mapper.3.f90}
-    (\specref{sec:declare_mapper})
+  \item Added missing \kcode{end target} directive in Example
+    \example{declare_mapper.3.f90} (\specref{sec:declare_mapper})
   \item Removed example for \kcode{flush} without a list from Synchronization 
     since the example is confusing and the use of \kcode{flush} is already
     covered in other examples
@@ -130,7 +189,7 @@
          with a section introduction on context selectors.
     (\specref{sec:context_based_variants})
   \item Fixed a typo (`\kcode{for}' $\rightarrow$ `\kcode{do}') in 
-    \example{Example metadirective.4.f90}
+    Example \example{metadirective.4.f90}
     (\specref{subsec:metadirective})
 \end{itemize}
 
@@ -171,27 +230,27 @@
 \begin{itemize}
   \item Cast to implementation-defined enum type \kcode{omp_event_handle_t} 
     now uses \bcode{uintptr_t} (not \bcode{void *}) in
-    \example{Example task_detach.2.c}
+    Example \example{task_detach.2.c}
     (\specref{sec:task_detachment})
   \item Moved Fortran \kcode{requires} directive into program main (\ucode{rev_off}), 
-    the program unit, in \example{Example target_reverse_offload.7.f90}
+    the program unit, in Example \example{target_reverse_offload.7.f90}
     (\specref{subsec:target_reverse_offload})
-  \item Fixed an inconsistent use of mapper in \example{Example target_mapper.3.f90}
+  \item Fixed an inconsistent use of mapper in Example \example{target_mapper.3.f90}
     (\specref{sec:declare_mapper})
   \item Added a missing semicolon at end of \ucode{XOR1} class definition in
-    \example{Example declare_target.2a.cpp}
+    Example \example{declare_target.2a.cpp}
     (\specref{subsec:declare_target_class})
   \item Fixed the placement of \kcode{declare simd} directive in 
-    \example{Examples linear_modifier.*.f90} (\specref{sec:linear_modifier})
+    Examples \example{linear_modifier.*.f90} (\specref{sec:linear_modifier})
     and added a general statement about where a Fortran declarative
     directive can appear (\specref{chap:directive_syntax})
-  \item Fixed mismatched argument list in \example{Example fort_sa_private.5.f}
+  \item Fixed mismatched argument list in Example \example{fort_sa_private.5.f}
     (\specref{sec:fort_sa_private})
   \item Moved the placement of \kcode{declare target enter}
     directive after function declaration
     (\specref{subsec:target_task_reduction})
   \item Fixed an incorrect use of \kcode{omp_in_parallel} routine in 
-    \example{Example metadirective.4}
+    Example \example{metadirective.4}
     (\specref{subsec:metadirective})
   \item Fixed an incorrect value for \kcode{at} clause
     (\specref{subsec:error})
@@ -258,7 +317,7 @@ Table~\ref{tab:Updated Examples 5.2} for details.
   \item Target memory and device pointer routines
      (\specref{subsec:target_mem_and_device_ptrs})
   \item Examples to illustrate the ordering properties of 
-     the \plc{flush} operation (\specref{sec:mem_model})
+     the \emph{flush} operation (\specref{sec:mem_model})
   \item User selector in the \kcode{metadirective} directive
      (\specref{subsec:metadirective})
 \end{itemize}
@@ -289,7 +348,7 @@ Table~\ref{tab:Updated Examples 5.2} for details.
 
 \item Added the following examples for the 5.1 features:
 \begin{itemize}
-  \item OpenMP directives in C++ \plc{attribute} specifiers
+  \item OpenMP directives in C++ \emph{attribute} specifiers
     (\specref{sec:attributes})
   \item Directive syntax adjustment to allow Fortran \bcode{BLOCK} ... 
     \bcode{END BLOCK} as a structured block 

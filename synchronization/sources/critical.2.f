@@ -4,7 +4,7 @@
 ! @@expect:	success
 ! @@version:	omp_5.0
       SUBROUTINE CRITICAL_EXAMPLE(X, Y)
-        USE OMP_LIB        ! or INCLUDE "omp_lib.h"
+        USE OMP_LIB
         
         REAL X(*), Y(*)
         INTEGER IX_NEXT, IY_NEXT

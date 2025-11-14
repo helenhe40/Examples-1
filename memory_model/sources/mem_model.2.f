@@ -4,7 +4,7 @@
 ! @@expect:	success
 ! @@version:	omp_3.1
        PROGRAM EXAMPLE
-       INCLUDE "omp_lib.h" ! or USE OMP_LIB
+       USE OMP_LIB
        INTEGER DATA
        INTEGER FLAG, FLAG_VAL
 

@@ -5,8 +5,8 @@
 \index{ASSOCIATE construct, Fortran@\bcode{ASSOCIATE} construct, Fortran}
 
 The following is an invalid example of specifying an associate name on a data-sharing attribute 
-clause. The constraint in the \docref{Data Sharing Attribute Rules} section in the OpenMP 
-4.0 API Specification states that an associate name preserves the association
+clause. The \docref{Data Sharing Attribute Rules} section of the OpenMP
+Specification states that an associate name preserves the association
 with the selector established at the \bcode{ASSOCIATE} statement. The associate 
 name \ucode{b} is associated with the shared variable \ucode{a}. With the predetermined data-sharing 
 attribute rule, the associate name \ucode{b} is not allowed to be specified on the \kcode{private} 
@@ -26,7 +26,7 @@ attribute clause. The associate name \ucode{u} is associated with \ucode{v} and 
 is specified on the \kcode{private} clause of the \kcode{parallel} construct. 
 The construct association is established prior to the \kcode{parallel} region. 
 The association between \ucode{u} and the original \ucode{v} is retained (see the \docref{Data Sharing 
-Attribute Rules} section in the OpenMP 4.0 API Specification). Inside the \kcode{parallel}
+Attribute Rules} section in the OpenMP Specification). Inside the \kcode{parallel}
 region, \ucode{v} has the value of -1 and \ucode{u} has the value of the original \ucode{v}.
 
 \topmarker{Fortran}
@@ -43,7 +43,7 @@ For the first 3 \kcode{target} constructs the associate name \ucode{a_aray} is
 associated with the selector \ucode{aray}, an array.  
 For the \kcode{target} construct of code block TARGET 1 just the selector
 \ucode{aray} is used and is implicitly mapped,
-likewise for the associate name \ucode{a_aray} in the TARGET 2 block.  
+and likewise for the associate name \ucode{a_aray} in the TARGET 2 block.
 However, mapping an associate name and its selector is not valid for the same
 \kcode{target} construct.  Hence the TARGET 3 block is non-conforming.
 

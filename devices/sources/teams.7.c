@@ -9,7 +9,7 @@
 #include<omp.h>
 
 int x;
-#pragma omp declare target local(x)
+#pragma omp declare_target local(x)
 
 int main() {
   x = 128;

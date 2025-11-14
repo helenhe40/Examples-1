@@ -10,7 +10,7 @@
 
       SUBROUTINE DYNTHREADS(X, NPOINTS)
 
-        INCLUDE "omp_lib.h"      ! or USE OMP_LIB
+        USE OMP_LIB
 
         INTEGER NPOINTS
         REAL X(NPOINTS)

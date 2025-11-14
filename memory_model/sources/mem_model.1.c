@@ -16,8 +16,8 @@ int main(){
   {
 
     if (omp_get_thread_num() == 0) {
-       #pragma omp atomic write
-       x = 5;
+      #pragma omp atomic write
+      x = 5;
     } else {
       int xval;
       #pragma omp atomic read

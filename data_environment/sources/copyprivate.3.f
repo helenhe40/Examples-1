@@ -4,7 +4,7 @@
 ! @@expect:	success
 ! @@version:	pre_omp_3.0
       FUNCTION NEW_LOCK()
-      USE OMP_LIB       ! or INCLUDE "omp_lib.h"
+        USE OMP_LIB
         INTEGER(OMP_LOCK_KIND), POINTER :: NEW_LOCK
 
 !$OMP   SINGLE

@@ -9,7 +9,7 @@
       END SUBROUTINE WORK
 
       SUBROUTINE INCORRECT()
-        INCLUDE "omp_lib.h"      ! or USE OMP_LIB
+        USE OMP_LIB
         INTEGER I, NP
 
         NP = OMP_GET_NUM_THREADS()   !misplaced: will return 1

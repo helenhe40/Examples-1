@@ -4,7 +4,7 @@
 ! @@expect:	success
 ! @@version:	omp_3.0
       module example
-      include 'omp_lib.h'
+      use omp_lib
       integer (kind=omp_lock_kind) lock
       integer i
 
@@ -19,7 +19,6 @@
               ! Outer task
               call omp_set_lock(lock)    ! lock is shared by
                                          ! default in the task
-                     ! Capture data for the following task
                      !$omp task     ! Task Scheduling Point 1
                               ! do work here
                      !$omp end task

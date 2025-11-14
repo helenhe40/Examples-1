@@ -33,7 +33,7 @@ int main(){
     }
 
     // Case 2
-    A &ar = d;         // reference to Derived object d
+    A &ar = d;         // reference to derived object d
     #pragma omp target // ar is implicitly mapped
     {
        ar.vf();        // unspecified behavior

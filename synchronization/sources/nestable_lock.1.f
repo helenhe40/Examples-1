@@ -23,7 +23,7 @@
       SUBROUTINE INCR_B(P, B)
         ! called from both INCR_PAIR and elsewhere,
         ! so we need a nestable lock
-        USE OMP_LIB       ! or INCLUDE "omp_lib.h"
+        USE OMP_LIB
         USE DATA
         TYPE(LOCKED_PAIR) :: P
         INTEGER B
@@ -33,7 +33,7 @@
       END SUBROUTINE INCR_B
 
       SUBROUTINE INCR_PAIR(P, A, B)
-        USE OMP_LIB        ! or INCLUDE "omp_lib.h"
+        USE OMP_LIB
         USE DATA
         TYPE(LOCKED_PAIR) :: P
         INTEGER A
@@ -46,7 +46,7 @@
       END SUBROUTINE INCR_PAIR
 
       SUBROUTINE NESTLOCK(P)
-        USE OMP_LIB        ! or INCLUDE "omp_lib.h"
+        USE OMP_LIB
         USE DATA
         TYPE(LOCKED_PAIR) :: P
         INTEGER WORK1, WORK2, WORK3

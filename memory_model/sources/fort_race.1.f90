@@ -5,7 +5,7 @@
 ! @@version:	pre_omp_3.0
 SUBROUTINE SHARED_RACE
 
-  INCLUDE "omp_lib.h"      ! or USE OMP_LIB
+  USE OMP_LIB
 
   REAL A(20)
   INTEGER MYTHREAD

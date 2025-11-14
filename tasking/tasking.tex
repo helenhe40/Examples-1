@@ -84,7 +84,7 @@ the task generating loop was in a tied task.
 \fexample[3.0]{tasking}{6}
 
 The following two examples demonstrate how the scheduling rules illustrated in 
-the \docref{Task Scheduling} section of the OpenMP 4.0 specification affect the usage of 
+the \docref{Task Scheduling} section of the OpenMP Specification affect the usage of
 threadprivate variables in tasks. A threadprivate 
 variable can be modified by another task that is executed by the same thread. Thus, 
 the value of a threadprivate variable cannot be assumed to be unchanged 
@@ -110,7 +110,7 @@ task scheduling point.
 \fexample[3.0]{tasking}{8}
 
 The following two examples demonstrate how the scheduling rules illustrated in 
-\docref{Task Scheduling} section of the OpenMP 4.0 specification affect the usage of locks 
+\docref{Task Scheduling} section of the OpenMP Specification affect the usage of locks
 and critical sections in tasks.  If a lock is held 
 across a task scheduling point, no attempt should be made to acquire the same lock 
 in any code that may be interleaved.  Otherwise, a deadlock is possible.
@@ -125,7 +125,7 @@ begin task 2 which will result in a deadlock when it tries to enter \kcode{criti
 \fexample[3.0]{tasking}{9}
 
 In the following example, \ucode{lock} is held across a task scheduling point. 
- However, according to the scheduling restrictions, the executing thread can't 
+ However, according to the scheduling restrictions, the executing thread cannot
 begin executing one of the non-descendant tasks that also acquires \ucode{lock} before 
 the \kcode{task} region is complete.  Therefore, no deadlock is possible.
 
@@ -141,10 +141,11 @@ The following examples illustrate the use of the \kcode{mergeable} clause in the
 \kcode{task} construct. In this first example, the \kcode{task} construct has 
 been annotated with the \kcode{mergeable}  clause. The addition of this clause 
 allows the implementation to reuse the data environment (including the ICVs) of 
-the parent task for the task inside \ucode{foo} if the task is included or undeferred. 
+the parent task for the task inside \ucode{foo} if the task is \plc{included}
+or \plc{undeferred}.
 Thus, the result of the execution may differ depending on whether the task is merged 
-or not. Therefore the mergeable clause needs to be used with caution. In this example, 
-the use of the mergeable clause is safe. As \ucode{x} is a shared variable the 
+or not. Therefore the \kcode{mergeable} clause needs to be used with caution. In this example,
+the use of the \kcode{mergeable} clause is safe. As \ucode{x} is a shared variable the
 outcome does not depend on whether or not the task is merged (that is, the task 
 will always increment the same variable and will always compute the same value 
 for \ucode{x}).

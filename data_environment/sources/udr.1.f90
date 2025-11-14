@@ -18,11 +18,11 @@ subroutine find_enclosing_rectangle ( n, points )
   integer :: n
   type(point) :: points(*)
 
-  !$omp declare reduction(min : point) &
+  !$omp declare_reduction(min : point) &
   !$omp&  combiner( minproc(omp_out, omp_in) ) &
   !$omp&  initializer( omp_priv = point( HUGE(0), HUGE(0) ) )
 
-  !$omp declare reduction(max : point) &
+  !$omp declare_reduction(max : point) &
   !$omp&  combiner( maxproc(omp_out, omp_in) ) &
   !$omp&  initializer( omp_priv = point( 0, 0 ) )
 

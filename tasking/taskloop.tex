@@ -13,10 +13,11 @@
 The following example illustrates how to execute a long running task concurrently with tasks created
 with a \kcode{taskloop} directive for a loop having unbalanced amounts of work for its iterations.
 
-The \kcode{grainsize} clause specifies that each task is to execute at least \ucode{500} iterations of the loop. 
+The \kcode{grainsize} clause specifies that each task is to execute at least \ucode{500} iterations of the loop.
 
-The \kcode{nogroup} clause removes the implicit taskgroup of the \kcode{taskloop} construct; 
-the explicit \kcode{taskgroup} construct in the example ensures that the function is not exited 
+The \kcode{nogroup} clause removes the implicit taskgroup of the \kcode{taskloop} construct;
+the explicit \kcode{taskgroup} construct in the example ensures that the function does not exit
+
 before the long-running task and the loops have finished execution.
 
 \cexample[4.5]{taskloop}{1}
@@ -25,23 +26,23 @@ before the long-running task and the loops have finished execution.
 
 %\clearpage
 
-Because a \kcode{taskloop} construct encloses a loop, it is often incorrectly 
-perceived as a worksharing construct (when it is directly nested in 
+Because a \kcode{taskloop} construct encloses a loop, it is often incorrectly
+perceived as a worksharing construct (when it is directly nested in
 a \kcode{parallel} region).
 
 While a worksharing construct distributes the loop iterations across all threads in a team,
 the entire loop of a \kcode{taskloop} construct is executed by every thread of the team.
 
-In the example below the first taskloop occurs closely nested within 
-a \kcode{parallel} region and the entire loop is executed by each of the \ucode{T} threads; 
-hence the reduction sum is executed \ucode{T}*\ucode{N} times.
- 
+In the example below the first taskloop occurs closely nested within
+a \kcode{parallel} region and the entire loop is executed by each of the \ucode{T} threads;
+hence the reduction sum is executed \ucode{T$\times$N} times.
+
 The loop of the second taskloop is within a \kcode{single} region and is executed
 by a single thread so that only \ucode{N} reduction sums occur.  (The other
-\ucode{N}-1 threads of the \kcode{parallel} region will participate in executing the 
+\ucode{N}-1 threads of the \kcode{parallel} region will participate in executing the
 tasks. This is the common use case for the \kcode{taskloop} construct.)
 
-In the example, the code thus prints \pout{x1 = 16384} (\ucode{T}*\ucode{N}) and 
+In the example, the code thus prints \pout{x1 = 16384} (\ucode{T$\times$N}) and
 \pout{x2 = 1024} (\ucode{N}).
 
 \cexample[4.5]{taskloop}{2}

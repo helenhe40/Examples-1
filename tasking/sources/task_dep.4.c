@@ -16,7 +16,7 @@ int main() {
       #pragma omp task shared(x) depend(in: x)
          printf("x + 1 = %d. ", x+1);
       #pragma omp task shared(x) depend(in: x)
-         printf("x + 2 = %d\n", x+2);
+         printf("x + 2 = %d. ", x+2);
    }
    return 0;
 }

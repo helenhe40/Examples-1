@@ -17,7 +17,6 @@
 !$omp end task
 !$omp critical
        ! Critical region 2
-       ! Capture data for the following task
 !$omp task
        !Task 3
        ! do work here

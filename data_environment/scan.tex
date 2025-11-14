@@ -19,14 +19,14 @@ iteration (\ucode{k}).
 \index{inclusive clause@\kcode{inclusive} clause}
 \index{clauses!exclusive@\kcode{exclusive}}
 \index{exclusive clause@\kcode{exclusive} clause}
-Basically, the \kcode{inscan} modifier connects a loop and/or SIMD reduction to 
+Basically, the \kcode{inscan} modifier connects a worksharing-loop and/or SIMD reduction to
 the scan operation, and a \kcode{scan} construct with an \kcode{inclusive} or 
 \kcode{exclusive} clause specifies whether the ``scan phase'' (lexical block 
-before and after the directive, respectively) is to use an \plc{inclusive} or 
-\plc{exclusive} scan value for the list item (\ucode{x}).
+before and after the directive, respectively) is to use an \emph{inclusive} or 
+\emph{exclusive} scan value for the list item (\ucode{x}).
 
-The first example uses the \plc{inclusive} scan operation on a composite
-loop-SIMD construct. The \kcode{scan} directive separates the reduction 
+The first example uses the \emph{inclusive} scan operation on a composite
+worksharing-loop SIMD construct. The \kcode{scan} directive separates the reduction
 statement on variable \ucode{x} from the use of \ucode{x} (saving to array \ucode{b}).
 The order of the statements in this example indicates that
 value \ucode{a[k]} (\ucode{a(k)} in Fortran) is included in the computation of 
@@ -36,8 +36,8 @@ the prefix sum \ucode{b[k]} (\ucode{b(k)} in Fortran) for iteration \ucode{k}.
 
 \ffreeexample[5.0]{scan}{1}
 
-The second example uses the \plc{exclusive} scan operation on a composite
-loop-SIMD construct. The \kcode{scan} directive separates the use of \ucode{x} 
+The second example uses the \emph{exclusive} scan operation on a composite
+worksharing-loop SIMD construct. The \kcode{scan} directive separates the use of \ucode{x}
 (saving to array \ucode{b}) from the reduction statement on variable \ucode{x}.
 The order of the statements in this example indicates that
 value \ucode{a[k]} (\ucode{a(k)} in Fortran) is excluded from the computation 
@@ -48,9 +48,9 @@ of the prefix sum \ucode{b[k]} (\ucode{b(k)} in Fortran) for iteration \ucode{k}
 \ffreeexample[5.0]{scan}{2}
 
 In OpenMP 6.0, the \kcode{scan} directive was extended to support 
-the concept of an \plc{initialization} phase where a private variable 
-can be set for later use in the \plc{input} phase of
-an \plc{exclusive} scan operation.
+the concept of an \emph{initialization phase} where a private variable 
+can be set for later use in the \emph{input phase} of
+an \emph{exclusive} scan operation.
 The following example is a rewrite of the previous exclusive scan
 example, which uses the \kcode{scan init_complete} directive to separate
 the initialization phase from the other phases of the scan operation.

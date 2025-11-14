@@ -23,8 +23,8 @@ OpenMP memory allocators can be used to allocate memory with
 specific allocator traits.  In the following example an OpenMP allocator is used to
 specify an alignment for arrays \ucode{x} and \ucode{y}. The
 general approach for attributing traits to variables allocated by
-OpenMP is to create or specify a pre-defined \plc{memory space}, create an
-array of \plc{traits}, and then form an \plc{allocator} from the
+OpenMP is to create or specify a pre-defined \emph{memory space}, create an
+array of \plc{traits}, and then form an \emph{allocator} from the
 memory space and trait.
 The allocator is then specified
 in an OpenMP allocation (using an API \kcode{omp_alloc()} function
@@ -44,15 +44,6 @@ These declarations are followed by a call to the
 \kcode{omp_init_allocator()} function to combine the memory
 space (\ucode{xy_memspace}) and the traits (\ucode{xy_traits})
 to form an allocator (\ucode{xy_alloc}).
-
-%In the C/C++ code the API  \plc{omp\_allocate()} function is used 
-%to allocate space, similar to \plc{malloc}, except that the allocator 
-%is specified as the second argument.  
-%In Fortran an API allocation function is not available. 
-%An \code{allocate} construct is used (with \plc{x} and \plc{y} 
-%listed as the variables to be allocated), along
-%with an \code{allocator} clause (specifying the \plc{xy\_alloc} as the allocator)
-%for the following Fortran \plc{allocate} statement.
 
 In the C/C++ code the API  \kcode{omp_allocate()} function is used
 to allocate space, similar to \bcode{malloc}, except that the allocator
@@ -81,8 +72,6 @@ users should be aware of the behavior of a reallocation.
 
 In the following example, the \ucode{a} variable is allocated with 64-byte
 alignment through the \kcode{align} clause of the \kcode{allocators} construct.
-%The alignment of the newly allocated object, \splc{a}, in the (reallocation)
-%assignment \splc{a = b} may not be the same as before.  
 The alignment of the newly allocated object, \ucode{a}, in the (reallocation)
 assignment \ucode{a = b} will not be reallocated with the 64-byte alignment, but
 with the 32-byte alignment prescribed by the trait of the \ucode{my_alloctr} 
@@ -124,7 +113,7 @@ for use in libraries, privatized variables, and with offloading.
 
 Two groups of variables, \{\ucode{v1, v2}\} and \{\ucode{v3, v4}\}, are used with the \kcode{allocate} 
 directive, and the \{\ucode{v5, v6}\} pair is used with the \kcode{allocate} clause. 
-Here we explicitly use predefined allocators \kcode{omp_high_bw_mem_alloc} and \kcode{omp_default_mem_alloc}
+Here, we explicitly use predefined allocators \kcode{omp_high_bw_mem_alloc} and \kcode{omp_default_mem_alloc}
 with the \kcode{allocate} directive in CASE 1. Similar effects are achieved for private variables of a task
 by using the \kcode{allocate} clause, as shown in CASE 2.  
 

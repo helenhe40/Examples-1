@@ -14,12 +14,12 @@
 Certain directives, including \kcode{declare variant},
 \kcode{begin declare variant}, and \kcode{metadirective}
 directives, specify function or directive variants for callsite or directive
-substitution. They use \plc{context selectors} to specify the contexts in which
+substitution. They use \emph{context selectors} to specify the contexts in which
 the variant may be selected for substitution. A context selector specifies
-various \plc{trait selectors}, grouped into \plc{trait selector sets}. A trait
+various \emph{trait selectors}, grouped into \emph{trait selector sets}. A trait
 selector, for a given trait selector set, identifies a corresponding trait
 (and, in some cases, its trait properties) that may or may not be active in an
-\plc{OpenMP context}. A context selector is considered to be \plc{compatible}
+\emph{OpenMP context}. A context selector is considered to be \emph{compatible}
 with a given OpenMP context if all traits and trait properties corresponding to
 trait selectors are active in that context. 
 
@@ -27,8 +27,8 @@ Each context selector is a comma-separated list of trait selector sets and each
 trait selector set has the form \plc{trait-selector-name}~\kcode{=\{}~
 \plc{trait-selector-list}~\kcode{\}}, where \plc{trait-selector-list} is a
 comma-separated list of trait selectors. Some trait selectors may in turn
-specify one or more \plc{trait properties}. Additionally, a trait selector may
-optionally specify a \plc{trait score} for explicit control over variant
+specify one or more \emph{trait properties}. Additionally, a trait selector may
+optionally specify a \emph{trait score} for explicit control over variant
 selection.
 
 Consider this context selector: \kcode{construct=\{teams,parallel,for\},} 
@@ -71,7 +71,7 @@ determines which one of the variants is selected.
 \index{match clause@\kcode{match} clause}
 
 A \kcode{declare variant} directive specifies an alternate function, 
-\plc{function variant}, to be used in place of the \plc{base function} 
+\emph{function variant}, to be used in place of the \emph{base function} 
 %when the trait within the \kcode{match} clause has a valid context.
 when the trait within the \kcode{match} clause matches the OpenMP context at a given callsite.
 The base function follows the directive in the C and C++ languages.
@@ -138,7 +138,7 @@ containing only a basic \kcode{parallel for} construct is used for the call to \
 \ffreeexample[5.0]{declare_variant}{2}
 
 The \kcode{begin declare variant} with a paired \kcode{end declare variant} directive was introduced 
-for C/C++ in the OpenMP 5.1 to allow nesting of declare variant directives. 
+for C/C++ in OpenMP Specification 5.1 to allow nesting of declare variant directives. 
 This example shows a practical situation where nested declare variant directives can be used 
 to include the correct specialized user function based on the underlying vendor \kcode{isa} trait. 
 The function name \ucode{my_fun()} is identical in all the header files and the version called will 
@@ -171,8 +171,6 @@ The directive in an \kcode{otherwise} clause is used when a directive of the
 In the \kcode{when} clause the \plc{context selector} (or just \plc{selector}) defines traits that are
 evaluated for selection of the directive that follows the selector. 
 This ``selectables'' directive is called a \plc{directive variant}.
-%Traits are grouped by \plc{construct}, \plc{implementation} and 
-%\plc{device} \plc{sets} to be used by a selector of the same name.
 
 \index{context selector!device@\plc{device}}
 In the first example the \plc{arch} trait of the
@@ -191,7 +189,6 @@ directive as selector set, has traits of \plc{kind}, \plc{isa} and \plc{arch}.
 \cexample[5.2]{metadirective}{1}
 
 \ffreeexample[5.2]{metadirective}{1}
-\pagebreak
 
 \index{context selector!implementation@\plc{implementation}}
 In the second example, the \kcode{implementation} selector set is specified
@@ -211,6 +208,7 @@ any clauses, as prescribed by the \kcode{otherwise} clause.
 \cexample[5.2]{metadirective}{2}
 
 \ffreeexample[5.2]{metadirective}{2}
+\clearpage
 
 \index{context selector!construct@\plc{construct}}
 
@@ -220,39 +218,54 @@ any clauses, as prescribed by the \kcode{otherwise} clause.
 \index{directives!begin declare target@\kcode{begin declare target}}
 \index{begin declare target directive@\kcode{begin declare target} directive}
 
-In the third example, a \kcode{construct} selector set is specified in the \kcode{when} clause.
-Here, a \kcode{metadirective} directive is used within a function that is also
-compiled as a function for a target device as directed by a declare target directive.
-The \kcode{target} directive name of the \kcode{construct} selector ensures that the
-\kcode{distribute parallel for/do} construct is employed for the target compilation.
-Otherwise, for the host-compiled version the \kcode{parallel for/do simd} construct is used.
+In the third example, a \kcode{construct} selector set is specified in the
+\kcode{when} clause. Here, a \kcode{metadirective} directive is used within a
+procedure \ucode{exp_pi_diff} that is annotated with a declare target
+directive. The program expects the procedure to be called from one of two
+contexts. It can be called from within a \kcode{target teams} region or it can
+be called \emph{outside} a \kcode{target} region but from an implicit or
+explicit parallel region. However, this usage of the \kcode{target} trait
+selector is not advisable. If the \kcode{target teams} region executes on the
+host device instead of a target device (e.g., due to offloading being disabled
+via the \kcode{OMP_TARGET_OFFLOAD} environment variable or due to lack of
+available target devices), the \emph{target} trait may not be set for the
+called procedure if the implementation generates only a single version of the
+procedure for execution on the host device that may also be called from outside
+a \kcode{target} region. In general, a program cannot portably rely on the
+declare target directive to set the \emph{target} trait when a procedure is
+called from a \kcode{target} region if the region executes on the host device.
 
-In the first call to the \ucode{exp_pi_diff()} routine the context is a
-\kcode{target teams} construct and the \kcode{distribute parallel for/do}
-construct version of the function is invoked,
-while in the second call the \kcode{parallel for/do simd} construct version is used.
+\cexample[5.2]{metadirective}{3a}
 
-%%%%%%%%
-This case illustrates an important point for users that may want to hoist the 
-\kcode{target} directive out of a function that contains the usual 
-\kcode{target teams distribute parallel for/do} construct
-(for providing alternate constructs through the \kcode{metadirective} directive as here).
-While this combined construct can be decomposed into a \kcode{target} and
-\kcode{teams distribute parallel for/do} constructs, the OpenMP 5.0 specification has the restriction:
-``If a \kcode{teams} construct is nested within a \kcode{target} construct, that \kcode{target} construct must
-contain no statements, declarations or directives outside of the \kcode{teams} construct''.
-So, the \kcode{teams} construct must immediately follow the \kcode{target} construct without any intervening
-code statements (which includes function calls).  
-Since the \kcode{target} construct alone cannot be hoisted out of a function, 
-the \kcode{target teams} construct has been hoisted out of the function, and 
-the \kcode{distribute parallel for/do} construct is used
-as the variant directive of the \kcode{metadirective} directive within the function.
-%%%%%%%%
+\ffreeexample[5.2]{metadirective}{3a}
 
-\cexample[5.2]{metadirective}{3}
+Rather than relying on the \emph{target} trait with a metadirective, a better
+approach would be to condition the directives on whether the call is made from
+inside a \kcode{teams} or \kcode{parallel} region. Ideally, there would be a
+way to implicitly generate different function variants from a single procedure
+definition, each to be called in some specified context. The defined procedure
+could then specialize further using a metadirective. Unfortunately, OpenMP
+does not currently provide such a mechanism. Alternatives would be to create
+specialized versions of the procedure for the different contexts and utilize
+the declare variant directive. Metadirectives might still be useful with this
+approach to avoid code duplication, but may also require use of the
+preprocessor (an option that is not generally available for Fortran).
 
-\ffreeexample[5.2]{metadirective}{3}
-\pagebreak
+In the following C/C++ example, the procedure \ucode{exp_pi_diff} is defined in
+its own header file. At the point the definition is included, a \kcode{match}
+clause may be defined via the preprocessor, and if it is defined then
+definition will be included with corresponding \kcode{begin declare_variant}
+and \kcode{end declare_variant} directives around it. The declare variant
+directives effectively import context information into the definition, which
+can then be used by a metadirective (or another call to a procedure with a
+declare variant directive). The \bcode{_Pragma} operator is used in the header
+file to portably allow for macro expansion within the directive.
+
+\begin{ccppspecific}
+\srcnexample[6.0]{metadirective}{3b}{h}
+\end{ccppspecific}
+\cexample[6.0]{metadirective}{3b}
+
 
 \index{context selector!user@\plc{user}}
 \index{context selector!condition selector@\kcode{condition} selector}
@@ -265,8 +278,8 @@ than at compile time.
 
 In the following example the \ucode{foo} function employs the \kcode{condition}
 selector to choose a device for execution at run time. 
-In the \ucode{bar} routine metadirectives are nested.
-At the outer level a selection between serial and parallel execution in performed
+In the \ucode{bar} procedure metadirectives are nested.
+At the outer level a selection between serial and parallel execution is performed
 at run time, followed by another run time selection on the schedule kind in the inner
 level when the active \plc{construct} trait is \kcode{parallel}.
 
@@ -292,7 +305,6 @@ is used.)
 \cexample[5.2]{metadirective}{4}
 
 \ffreeexample[5.2]{metadirective}{4}
-\pagebreak
 
 Metadirectives can be used in conjunction with templates as shown in the C++ code below.
 Here the template definition generates two versions of the Fibonacci function.

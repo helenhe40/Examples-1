@@ -18,7 +18,7 @@ void work() {
             {
 	// lock is shared by default in the task
 	omp_set_lock(&lock);
-                // Capture data for the following task
+
 #pragma omp task
 	// Task Scheduling Point 1
                 { /* do work here */ }

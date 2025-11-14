@@ -13,11 +13,11 @@ execute correctly.
 \index{unified_shared_memory clause@\kcode{unified_shared_memory} clause}
 In the following example the \kcode{unified_shared_memory} clause 
 of the \kcode{requires} directive ensures that the host and all 
-devices accessible through OpenMP provide a \plc{unified address} space
+devices accessible through OpenMP provide a \emph{unified address} space
 for memory that is shared by all devices.
 
 The example illustrates the use of the \kcode{requires} directive specifying
-\plc{unified shared memory} in file scope, before any device 
+\emph{unified shared memory} in file scope, before any device 
 directives or device routines. No \kcode{map} clause is needed for
 the \ucode{p} structure on the device (and its address \ucode{\&p}, for the C++ code,
 is the same address on the host and device).

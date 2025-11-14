@@ -5,7 +5,7 @@
 
 \index{mapping!virtual functions, C++}
 
-The 5.2 OpenMP Specification clarified restrictions on the use 
+The OpenMP Specification 5.2 clarified restrictions on the use
 of polymorphic classes and virtual functions when used within 
 \kcode{target} regions. The following examples illustrate 
 use cases and the limitations imposed by restrictions for
@@ -17,7 +17,7 @@ through a pointer and reference without Unified Shared Memory.
 A class, \ucode{D}, is derived from class \ucode{A}.  
 Function \ucode{vf} in class \ucode{A} is declared
 virtual, and the function \ucode{vf} in class \ucode{D} is declared with override.
-An object, \ucode{d} of type \ucode{D}, is created and mapped through a \kcode{target data}
+An object, \ucode{d} of type \ucode{D}, is created and mapped through a \kcode{target_data}
 directive.
 
 In the first case, a pointer of type \ucode{A}, \ucode{ap}, is assigned to point 
@@ -32,9 +32,9 @@ That is, the behavior of the implicit map of \ucode{ar}
 is non-conforming -- its static type \ucode{A} doesn't match its dynamic type \ucode{D}.  
 Hence the behavior of the access to the virtual functions is unspecified.
 
-\topmarker{C++}
 \cppnexample[5.2]{virtual_functions}{1}
 
+\topmarker{C++}
 The second example illustrates the restriction:
 
 \emph{``Invoking a virtual member function of an object on a device other than the device on which the
@@ -49,6 +49,6 @@ In the second case, the object \ucode{ap} is instantiated on the host; access of
 the next \kcode{target} region is permitted. (Unified Shared Memory is
 used here to minimize mapping concerns.)
 
-\topmarker{C++}
+%\topmarker{C++}
 \cppnexample[5.2]{virtual_functions}{2}
 \end{cppspecific}

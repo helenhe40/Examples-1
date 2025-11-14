@@ -13,10 +13,10 @@ The \kcode{if} clause on some directives
 can direct the runtime to ignore or alter the behavior of the construct.
 Of course, the base-language \bcode{if} statements can be used to control the execution
 of stand-alone directives (such as \kcode{flush}, \kcode{barrier}, \kcode{taskwait}, 
-and  \kcode{taskyield}).
+and \kcode{taskyield}).
 However, the directives must appear in a block structure, and not as a substatement.
-The \kcode{metadirective} and \kcode{declare variant} directives provide conditional 
-selection of directives and routines for compilation (and use), respectively.
+The \kcode{metadirective} and \kcode{declare_variant} directives provide conditional 
+selection of directives and procedures for compilation (and use), respectively.
 The \kcode{assume} and \kcode{requires} directives provide invariants
 for optimizing compilation, and essential features for compilation 
 and correct execution, respectively.
@@ -26,12 +26,12 @@ and correct execution, respectively.
 CANCELLATION
 
 Cancellation (termination) of the normal sequence of execution for the threads in an OpenMP region can
-be  accomplished with the \kcode{cancel} construct.  The construct uses a
+be accomplished with the \kcode{cancel} construct. The construct uses a
 \plc{construct-type-clause} to set the region-type to activate for the cancellation. 
-That is, inclusion  of one of the \plc{construct-type-clause} names \kcode{parallel}, \kcode{for}, 
+That is, inclusion of one of the \plc{construct-type-clause} names \kcode{parallel}, \kcode{for}, 
 \kcode{do}, \kcode{sections} or \kcode{taskgroup} on the directive line 
-activates the corresponding region.  
-The \kcode{cancel} construct is activated by the first encountering thread,  and it
+activates the corresponding region.
+The \kcode{cancel} construct is activated by the first encountering thread, and it
 continues execution at the end of the named region.
 The \kcode{cancel} construct is also a cancellation point for any other thread of the team 
 to also continue execution at the end of the named region.  
@@ -51,38 +51,31 @@ discarded as completed tasks.
 \pagebreak
 CONTROL VARIABLES 
 
-  Internal control variables (ICV) are used by implementations to hold values which control the execution
-  of OpenMP regions.  Control (and hence the ICVs) may be set as implementation defaults, 
-  or set and adjusted through environment variables, clauses, and API functions.  
- %Many of the ICV control values are accessible through API function calls.  
-  Initial ICV values are reported by the runtime
-  if the \kcode{OMP_DISPLAY_ENV} environment variable has been set to \vcode{TRUE} or \vcode{VERBOSE}. 
+Internal control variables (ICV) are used by implementations to hold values which control the execution
+of OpenMP regions. Control (and hence the ICVs) may be set as implementation defaults, 
+or set and adjusted through environment variables, clauses, and API functions.
+Initial ICV values are reported by the runtime
+if the \kcode{OMP_DISPLAY_ENV} environment variable has been set to \vcode{TRUE} or \vcode{VERBOSE}. 
 
  %As an example, the \plc{nthreads-var} is the ICV that holds the number of threads
- %to be used in a \code{parallel} region.  It can be set with the \code{OMP\_NUM\_THREADS} environment variable, 
- %the \code{omp\_set\_num\_threads()} API function, or the \code{num\_threads} clause.  The default \plc{nthreads-var}
- %value is implementation defined.  All of the ICVs are presented in the \plc{Internal Control Variables} section
- %of the \plc{Directives} chapter of the OpenMP Specifications document.  Within the same document section, override 
+ %to be used in a \kcode{parallel} region.  It can be set with the \kcode{OMP_NUM_THREADS} environment variable, 
+ %the \kcode{omp_set_num_threads()} API function, or the \kcode{num_threads} clause.  The default \plc{nthreads-var}
+ %value is implementation defined.  All of the ICVs are presented in the \docref{Internal Control Variables} section
+ %of the \docref{Directives} chapter of the OpenMP Specifications document.  Within the same document section, override 
  %relationships and scoping information can be found for applying user specifications and understanding the 
  %extent of the control.
 
 \bigskip
 NESTED CONSTRUCTS
 
-Certain combinations of nested constructs are permitted, giving rise to \plc{combined} constructs
-consisting of two or more directives.  These can be used when the two (or several) constructs would be used
+Certain combinations of nested constructs are permitted, giving rise to \emph{combined} constructs
+consisting of two or more directives. These can be used when the two (or several) constructs would be used
 immediately in succession (closely nested). A combined construct can use the clauses of the component
 constructs without restrictions.
-A \plc{composite} construct is a combined construct which has one or more clauses with (an often obviously)
-modified or restricted meaning, relative to when the constructs are uncombined. %%[appear separately (singly).
+A \emph{composite} construct is a combined construct which has one or more clauses with (an often obviously)
+modified or restricted meaning, relative to when the constructs are uncombined.
 
-%The combined \code{parallel do} and \code{parallel for} constructs are formed by combining the \code{parallel}
-%construct with one of the loops constructs \code{do} or \code{for}.  The
-%\code{parallel do SIMD} and \code{parallel for SIMD} constructs are composite constructs (composed from
-%the parallel loop constructs and the \code{SIMD} construct), because the \code{collapse} clause must
-%explicitly address the ordering of loop chunking \plc{and} SIMD ``combined'' execution.
-
-Certain nestings are forbidden, and often the reasoning is obvious.  For example, worksharing constructs cannot be nested, and
+Certain nestings are forbidden, and often the reasoning is obvious. For example, worksharing constructs cannot be nested, and
 the \kcode{barrier} construct cannot be nested inside a worksharing construct, or a \kcode{critical} construct. 
 Also, \kcode{target} constructs cannot be nested, unless the nested target is a reverse offload.
 

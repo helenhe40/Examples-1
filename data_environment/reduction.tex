@@ -37,14 +37,14 @@ named \ucode{MAX}.
 \topmarker{Fortran}
 
 The following conforming program performs the reduction using the 
-\emph{intrinsic procedure name} \kcode{MAX} even though the intrinsic \bcode{MAX} has been renamed 
-to \ucode{REN}.
+\emph{intrinsic procedure name} \bcode{MAX} even though the intrinsic
+\bcode{MAX} has been renamed to \ucode{REN}.
 
 \ffreenexample{reduction}{4}
 
 The following conforming program performs the reduction using 
-\plc{intrinsic procedure name} \kcode{MAX} even though the intrinsic \bcode{MAX} has been renamed 
-to \ucode{MIN}.
+the intrinsic procedure name \bcode{MAX} even though the intrinsic \bcode{MAX}
+has been renamed to \ucode{MIN}.
 
 \ffreenexample{reduction}{5}
 \end{fortranspecific}
@@ -66,7 +66,12 @@ the start of the \kcode{parallel} region.
 
 \fexample[5.1]{reduction}{6}
 
-The following example demonstrates the reduction of array \ucode{a}.  In C/C++ this is illustrated by the explicit use of an array section \ucode{a[0:N]} in the \kcode{reduction} clause.  The corresponding Fortran example uses array syntax supported in the base language.  As of the OpenMP 4.5 specification the explicit use of array section in the \kcode{reduction} clause in Fortran is not permitted.  But this oversight has been fixed in the OpenMP 5.0 specification.
+The following example demonstrates the reduction of array \ucode{a}.  In C/C++
+this is illustrated by the explicit use of an array section \ucode{a[0:N]} in
+the \kcode{reduction} clause.  The corresponding Fortran example uses array
+syntax supported in the base language.  As of the OpenMP 5.0 specification, the
+explicit use of an array section in the \kcode{reduction} clause is
+also permitted in Fortran.
 
 
 \cexample[4.5]{reduction}{7}
@@ -82,7 +87,7 @@ The following example demonstrates the reduction of array \ucode{a}.  In C/C++ t
 \index{in_reduction clause@\kcode{in_reduction} clause}
 \index{reductions!in_reduction clause@\kcode{in_reduction} clause}
 
-In OpenMP 5.0 the \kcode{task_reduction} clause was created for the \kcode{taskgroup} construct, 
+In OpenMP 5.0 the \kcode{task_reduction} clause was added for the \kcode{taskgroup} construct
 to allow reductions among explicit tasks that have an \kcode{in_reduction} clause.
 
 In the \example{task_reduction.1} example below a reduction is performed as the algorithm
@@ -116,7 +121,7 @@ implicit tasks.
 
 There are 2 reduction use cases (identified by USE CASE \#) in the \example{task_reduction.2} example below.  
 
-In USE CASE 1 a \kcode{task} modifier in the \kcode{reduction} clause 
+In USE CASE 1, a \kcode{task} modifier in the \kcode{reduction} clause
 of the \kcode{parallel} construct is used to include the reductions of any 
 participating tasks, those with an \kcode{in_reduction} clause and matching 
 \plc{reduction-identifiers} (\kcode{+}) and list items (\ucode{x}).  
@@ -129,7 +134,7 @@ in a \kcode{reduction} clause of the \kcode{parallel} construct
 can be used to avoid having to create a \kcode{taskgroup} construct 
 (and its \kcode{task_reduction} clause) around the task generating structure.
 
-In USE CASE 2 tasks participating in the reduction are within a
+In USE CASE 2, tasks participating in the reduction are within a
 worksharing region (a parallel worksharing-loop construct).
 Here, too, no \kcode{taskgroup} is required, and the \plc{reduction-identifier} (\kcode{+})
 and list item (variable \ucode{x}) match as required.
@@ -246,10 +251,10 @@ tasks are combined in some order into the original reduction variable.
 \index{taskloop construct@\kcode{taskloop} construct}
 
 In the OpenMP 5.0 Specification the \kcode{taskloop} construct
-was extended to include the reductions.
+was extended to support task reductions.
 
 The following two examples show how to implement a reduction over an array
-using taskloop reduction in two different ways.
+using a taskloop reduction in two different ways.
 In the first
 example we apply the \kcode{reduction} clause to the \kcode{taskloop} construct. As it was
 explained above in the task reduction examples, a reduction over tasks is
@@ -265,21 +270,6 @@ reduction that has not been defined.
 
 \cexample[5.0]{taskloop_reduction}{1}
 \ffreeexample[5.0]{taskloop_reduction}{1}
-
-%In the second example, we are computing exactly the same
-%value but we do it in a very different way. The first thing that we do in the
-%\plc{array\_sum} function is to create a \code{taskgroup} region that defines the scope of a
-%new reduction using the \code{task\_reduction} clause.
-%After that, we specify that a task and also the tasks generated
-%by a taskloop will participate in that reduction using the \code{in\_reduction} clause
-%on the \code{task} and \code{taskloop} constructs, respectively. Note that
-%we also added the \code{nogroup} clause to the \code{taskloop} construct. This is allowed
-%because what we are expressing with the \code{in\_reduction} clause is different
-%from what we were expressing with the \code{reduction} clause. In one case we specify
-%that the generated tasks will participate in a previously declared reduction
-%(\code{in\_reduction} clause) whereas in the other case we specify that we want to
-%create a new reduction and also that all tasks generated by the taskloop will
-%participate on it.
 
 The second example computes exactly the same value as in the preceding \example{taskloop_reduction.1} code section,
 but in a very different way.
@@ -415,6 +405,7 @@ for reduction as opposed to shared by default for a variable
 passed as a procedure argument.
 \cppexample[6.0]{priv_reduction}{2}
 \ffreeexample[6.0]{priv_reduction}{2}
+\clearpage
 
 The following example shows the effect of nested \kcode{reduction} constructs.
 For the \kcode{parallel} construct, the reduction is on the shared variable

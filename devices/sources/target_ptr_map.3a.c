@@ -3,14 +3,12 @@
 * @@type:	C
 * @@operation:	compile
 * @@expect:	unspecified
-* @@version:	omp_5.1
+* @@version:	omp_6.0
 */
-#define N 100
 
-int x[N], y[N];
-#pragma omp begin declare target
+int x[2], y[2];
 int *p1;
-#pragma omp end declare target
+#pragma omp declare_target enter(p1)
 int *p2;
 
 int foo()
@@ -18,25 +16,18 @@ int foo()
   p1 = &x[0];
   p2 = &y[0];
 
-  // Explicitly map array section x[:N]
-  #pragma omp target enter data map(x[:N])
+  #pragma omp target  // implicit map(x, y, p1, p2[:])
+                      // p2 is predetermined firstprivate
+  { // no pointer attachment for p1 to x on entry
 
-  #pragma omp target  // as if .. map(p1) map(p1[:0]) map(p2[:0]) map(y)
-  {
     // Accessing the mapped arrays x,y is OK here.
     x[0] = 1;
-    y[1] = 2;
+    y[0] = 2;
 
-    // Pointer attachment for p1 does not occur here
-    //   because p1[:0] does not allocate a new array section and
-    //   array x is present on the target construct as it was mapped
-    //   before by the target enter data directive.
-    p1[0] = 3;      // accessing p1 is undefined
-
-    // The initial value of p2 in the target region is undefined
-    //   because map(y) may occur after map(p2[:0]).
-    p2[1] = 4;      // accessing p2 is undefined
-
+    p1[1] = 3;  // undefined behavior
+    p2[1] = 4;  // undefined behavior prior to 6.0, but
+                // ok in 6.0: firstprivate p2 points to y
   }
+
   return 0;
 }

@@ -8,10 +8,10 @@
 \index{clauses!depend@\kcode{depend}}
 
 The stand-alone \kcode{depobj} construct provides a mechanism 
-to create a \plc{depend object} that expresses a dependence to be 
+to create a \emph{depend object} that expresses a dependence to be 
 used subsequently in the \kcode{depend} clause of another construct.
 Dependence information is created from a dependence type and a storage location
-that is specified in the \kcode{depend} clause of an \kcode{depobj} construct,
+that is specified in the \kcode{depend} clause of a \kcode{depobj} construct,
 %just as one would find directly on a \code{task} construct.  
 and it is stored in the depend object.
 The depend object is represented by a variable of type \kcode{omp_depend_t} 
@@ -25,7 +25,7 @@ in C/C++ and by a scalar variable of integer kind \kcode{omp_depend_kind} in For
 \index{clauses!destroy@\kcode{destroy}}
 In the example below the stand-alone \kcode{depobj} construct uses the 
 \kcode{depend}, \kcode{update} and \kcode{destroy} clauses to 
-\plc{initialize}, \plc{update} and \plc{uninitialize}
+\emph{initialize}, \emph{update} and \emph{uninitialize}
 a depend object (\ucode{obj}).
 
 The first \kcode{depobj} construct initializes the \ucode{obj} 

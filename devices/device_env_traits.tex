@@ -27,7 +27,7 @@ the rest of the non-host devices as specified by "\ucode{*}":
 export OMP_AVAILABLE_DEVICES=\ucode{"kind(gpu)&&vendor(A),*"}
 \end{boxedcode}
 
-Available devices would be all non-gpu devices from vendor \ucode{A}:
+Available devices would be all non-GPU devices from vendor \ucode{A}:
 \begin{boxedcode}
 export OMP_AVAILABLE_DEVICES=\ucode{"!kind(gpu)&&vendor(A)"}
 \end{boxedcode}
@@ -58,7 +58,7 @@ export OMP_DEFAULT_DEVICE=\ucode{"kind(gpu)&&vendor(A),initial"}
 
 The default device will be some visible vendor \ucode{A} GPU device. 
 If not available, then set to invalid device so that upon first use of default 
-device the program will error out:
+device the program will result in an error:
 \begin{boxedcode}
 export OMP_DEFAULT_DEVICE=\ucode{"kind(gpu)&&vendor(A),invalid"}
 \end{boxedcode}

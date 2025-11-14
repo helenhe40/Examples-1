@@ -4,7 +4,7 @@
 ! @@expect:	success
 ! @@version:	omp_3.1
 PROGRAM MEMMODEL
-  INCLUDE "omp_lib.h"      ! or USE OMP_LIB
+  USE OMP_LIB
   INTEGER X, XVAL
 
   X = 2
@@ -12,7 +12,7 @@ PROGRAM MEMMODEL
 
     IF (OMP_GET_THREAD_NUM() .EQ. 0) THEN
     !$OMP ATOMIC WRITE
-       X = 5
+      X = 5
     ELSE
     !$OMP ATOMIC READ
       XVAL = X

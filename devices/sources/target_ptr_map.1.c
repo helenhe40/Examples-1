@@ -11,10 +11,10 @@
 
 int main()
 {
-  int *ptr1;
-  int *ptr2;
-  int *ptr3;
-  int aray[N];
+  int *ptr1 = 0;
+  int *ptr2 = 0;
+  int *ptr3 = 0;
+  int arr[N];
 
   ptr1 = (int *)malloc(sizeof(int)*N);
   ptr2 = (int *)malloc(sizeof(int)*N);
@@ -25,25 +25,29 @@ int main()
      {
          ptr1[i] = i;
          ptr2[i] = i;
-         aray[i] = i;
+         arr[i] = i;
      }
 
-   //*(++ptr1) = 9;  //NOT ALLOWED since ptr1 is an attached pointer
-     *(++ptr2) = 9;  //    allowed since ptr2 is firstprivate
+     // ptr1 must not change since it is an attached pointer
+     // *(++ptr1) = 9;
 
-     ptr3=(int *)malloc(sizeof(int)*N); // ptr3 is firstprivate
-                                        // ptr3 value not returned
+     // ok to modify firstprivate ptr2; this assigns to ptr2[1]
+     *(++ptr2) = 9;
+
+     // ok to modify firstprivate ptr3
+     ptr3 = (int *)malloc(sizeof(int)*N);
+
      for (int i=0; i<N; i++) ptr3[i] = 5;
 
      for (int i=0; i<N; i++) ptr1[i] += ptr3[i];
 
-     free(ptr3);     // explicitly free allocated storage on device
-   }
+     free(ptr3);
+  }
 
-   printf(" %d %d\n",ptr1[1],ptr2[1]);
-   //        6  9
+  // prints 6 and 9 for ptr1[1] and ptr2[1]
+  printf(" %d %d\n",ptr1[1], ptr2[1]);
 
-   free(ptr1);
-   free(ptr2);
-   return 0;
+  free(ptr1);
+  free(ptr2);
+  return 0;
 }

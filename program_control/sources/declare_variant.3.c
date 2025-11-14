@@ -41,7 +41,6 @@
 
 #define N 64
 double array[N];
-#pragma omp target 
 
 int main() {
    // Array initialization

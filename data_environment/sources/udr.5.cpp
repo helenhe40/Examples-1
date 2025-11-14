@@ -16,6 +16,6 @@ public:
     
    V& operator+= ( const V& );
     
-   #pragma omp declare reduction( + : V ) combiner( omp_out += omp_in ) \
+   #pragma omp declare_reduction( + : V ) combiner( omp_out += omp_in ) \
            initializer(omp_priv(omp_orig))
 };

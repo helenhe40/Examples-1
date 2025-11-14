@@ -1,32 +1,42 @@
 \cchapter{Data Environment}{data_environment}
 \label{chap:data_environment}
-The OpenMP \plc{data environment} contains data attributes of variables and
-objects.  Many constructs (such as \kcode{parallel}, \kcode{simd}, \kcode{task}) 
-accept clauses to control \plc{data-sharing} attributes
-of referenced variables in the construct, where \plc{data-sharing} applies to
-whether the attribute of the variable is \plc{shared}, 
-is \plc{private} storage, or has special operational characteristics 
-(as found in the \kcode{firstprivate}, \kcode{lastprivate}, \kcode{linear}, or \kcode{reduction} clause).
+An OpenMP \emph{data environment} is defined by a set of variables or objects
+and their \emph{data-environment attributes}. Data-environment attributes can
+be divided into \emph{data-sharing attributes} and \emph{data-mapping
+attributes}. 
 
-The data environment for a device (distinguished as a \plc{device data environment})
-is controlled on the host by \plc{data-mapping} attributes, which determine the
-relationship of the data on the host, the \plc{original} data, and the data on the
-device, the \plc{corresponding} data.
+Many constructs (such as \kcode{parallel}, \kcode{simd}, \kcode{task}) 
+accept clauses to control data-sharing attributes of referenced variables in
+the construct, where data-sharing applies to whether the attribute of the
+variable is \emph{shared} or \emph{private}, in addition to other special
+operational characteristics of private (as indicated by the
+\kcode{firstprivate}, \kcode{lastprivate}, \kcode{linear}, or \kcode{reduction}
+clause).
+
+Variables and objects in the data environment for a target device
+(distinguished as a device data environment) have \emph{data-mapping
+attributes} that are controlled by data-mapping constructs (such as
+\kcode{target} or \kcode{target_data}), which determine the relationship of the
+data on the host (the \emph{original} data) and the data on the device (the
+\emph{corresponding} data).
 
 \bigskip
 DATA-SHARING ATTRIBUTES
 
-Data-sharing attributes of variables can be classified as being \plc{predetermined},
-\plc{explicitly determined} or \plc{implicitly determined}.
+Data-sharing attributes of variables can be classified as being \emph{predetermined},
+\emph{explicitly determined} or \emph{implicitly determined}.
 
 Certain variables and objects have predetermined attributes.  
 A commonly found case is the loop iteration variable in associated loops 
-of a \kcode{for} or \kcode{do} construct. It has a private data-sharing attribute.
-Variables with predetermined data-sharing attributes cannot be listed in a data-sharing clause; but there are some
-exceptions (mainly concerning loop iteration variables).
+of a \kcode{for} or \kcode{do} construct. It has a private data-sharing
+attribute. Certain declarative directives can also be used to define variables
+as having special predetermined data-sharing attributes including \emph{threadprivate},
+\emph{groupprivate}, and \emph{device-local}. Variables with predetermined
+data-sharing attributes cannot usually be listed in a data-sharing clause, but there
+are some exceptions (mainly concerning loop iteration variables).
 
 Variables with explicitly determined data-sharing attributes are those that are
-referenced in a given construct and are listed in a data-sharing attribute
+referenced in a given construct and are listed in a data-sharing
 clause on the construct. Some of the common data-sharing clauses are:
 \kcode{shared}, \kcode{private}, \kcode{firstprivate}, \kcode{lastprivate}, 
 \kcode{linear}, and \kcode{reduction}. % Are these all of them?
@@ -38,44 +48,57 @@ attribute clause of an enclosing construct.
 For a complete list of variables and objects with predetermined and
 implicitly determined attributes, please refer to the
 \docref{Data-sharing Attribute Rules for Variables Referenced in a Construct}
-subsection of the OpenMP Specifications document.  
+subsection of the OpenMP Specification document.  
 
 \bigskip
 DATA-MAPPING ATTRIBUTES
 
-The \kcode{map} clause on a device construct explicitly specifies how the list items in
-the clause are mapped from the encountering task's data environment (on the host)
-to the corresponding item in the device data environment (on the device).
-The common \plc{list items} are arrays, array sections, scalars, pointers, and
-structure elements (members). 
+A data-mapping attribute determines the manner in which a variable or object is
+mapped from a data environment of a task (typically on the host device) to a
+device data environment on a different device. The specification of list items
+in a \kcode{map} clause is the main mechanism for controlling the data-mapping
+attributes of data in a device data environment. These list items may include
+variables, including array and structure elements, array sections, as well as
+more general lvalue expressions in C/C++ (such as a dereferenced expression of
+pointer type).
 
-Procedures and global variables have predetermined data mapping if they appear
-within the list or block of a \kcode{declare target} directive. Also, a C/C++ pointer
-is mapped as a zero-length array section, as is a C++ variable that is a reference to a pointer.
-% Waiting for response from Eric on this.
+If a \kcode{map} clause is not explicitly specified for a variable that is
+referenced in a \kcode{target} construct, that variable may still have an
+\emph{implicit} data-mapping attribute (as if it had appeared in a \kcode{map}
+clause). For example, the use of a declare target directive or
+\kcode{defaultmap} clause can result in a variable having an implicit
+data-mapping attribute. Additionally, list items that appear in certain
+data-sharing clauses (e.g., \kcode{reduction}) on a compound target construct
+can imply a data-mapping attribute. Also, non-scalar variables referenced
+inside a \kcode{target} construct that do not otherwise have a predetermined or
+explicit data-sharing or data-mapping attribute will typically be implicitly
+mapped by default, in contrast to scalar variables which are typically given
+an implicit firstprivate attribute (these default implicit attributes can be
+changed with the use of the \kcode{defaultmap} clause). For a complete set of
+rules for implicit data-mapping attributes, refer to the
+\docref{Implicit Data-Mapping Attribute Rules}
+subsection of the OpenMP Specification document.
 
-Without explicit mapping, non-scalar and non-pointer variables within the scope of the \kcode{target}
-construct are implicitly mapped with a \plc{map-type} of \kcode{tofrom}.
-Without explicit mapping, scalar variables within the scope of the \kcode{target}
-construct are not mapped, but have an implicit firstprivate data-sharing
-attribute. (That is, the value of the original variable is given to a private
-variable of the same name on the device.) This behavior can be changed with
-the \kcode{defaultmap} clause.
-
-The \kcode{map} clause can appear on \kcode{target}, \kcode{target data} and 
-\kcode{target enter/exit data} constructs.  The operations of creation and
-removal of device storage as well as assignment of the original list item 
-values to the corresponding list items may be complicated when the list 
-item appears on multiple constructs or when the host and device storage 
-is shared. In these cases the item's reference count, the number of times
-it has been referenced (increment by 1 on entry and decrement by 1 on exit) in nested (structured)
-map regions and/or accumulative (unstructured) mappings, determines the operation.
-Details of the \kcode{map} clause and reference count operation are specified 
-in the \docref{\kcode{map} Clause} subsection of the OpenMP Specifications document.
+The \kcode{map} clause can appear on data-mapping constructs (specifically,
+\kcode{target}, \kcode{target_data}, \kcode{target_enter_data} and
+\kcode{target_exit_data}).  The operations of creation and removal of corresponding
+storage as well as assignment of the original list item values to the
+corresponding list items may be complicated when the list item appears on
+multiple constructs that are executed concurrently. To accomodate this, a
+reference count is maintained to determine which of those operations are
+needed. This can help ensure that corresponding storage is not removed on
+completion of one construct while another construct that has mapped the same
+data still requires it, as well as elide data transfers between devices in
+cases where corresponding storage is not being created or removed (though this
+can be overridden with use of modifiers such as \kcode{delete} or
+\kcode{always}). Details of the \kcode{map} clause and reference count
+operations are specified in the \docref{\kcode{map} Clause} subsection of the
+OpenMP Specification document.
 
 
 %===== Examples Sections =====
 \input{data_environment/threadprivate}
+\input{data_environment/groupprivate}
 \input{data_environment/default_none}
 \input{data_environment/private}
 \input{data_environment/fort_loopvar}

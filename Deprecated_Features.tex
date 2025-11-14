@@ -60,6 +60,8 @@ accordingly and listed in Section~\ref{sec:Updated Examples}.
 \begin{supertabular}{p{0.4in} p{2.3in} p{2.2in}}
 6.0 & \kcode{declare reduction(}\plc{reduction-id}: \plc{typename-list}: \plc{combiner}\kcode{)} 
     & \kcode{declare reduction(}\plc{reduction-id}: \plc{typename-list}\kcode{)} \kcode{combiner(\plc{combiner-exp})} \\ 
+6.0 & Fortran include file \kcode{omp_lib.h}
+    & Fortran module \kcode{omp_lib} \\
 \hline
 5.2 & \kcode{default} clause on metadirectives 
     & \kcode{otherwise} clause \\
@@ -115,18 +117,42 @@ the Examples Document Version
 
 \nolinenumbers
 \dpftable{6.0}
-\begin{supertabular}{p{1.7in} p{1.1in} p{2.2in}}
+\begin{supertabular}{p{2.1in} p{1.0in} p{2.0in}}
   \hexentry{udr.1}[f90]{4.0} &
     \plc{combiner} expression in \kcode{declare} \\
   \hexentry{udr.2}[f90]{4.0} & 
-    \kcode{reduction} directive changed to use \\
-  \hexentry{udr.3}[f90]{4.0} & \kcode{combiner} clause \\
+    \kcode{reduction} directive changed to \\
+  \hexentry{udr.3}[f90]{4.0} & use \kcode{combiner} clause \\
   \hexentry[f90]{udr.4}{4.0} & \\
   \hexentry[cpp]{udr.5}{4.0} & \\
   \hexentry[cpp]{udr.6}{4.0} & \\[2pt]
+\hline\\[-2ex]
+  \hexentry[f]{default_none.1}{pre-3.0$^*$} & 
+     Fortran include file \kcode{omp_lib.h} \\
+  \hexentry[f90]{fort_loopvar.1}{pre-3.0$^*$} & 
+     replaced with Fortran module \\
+  \hexentry[f]{directive_syntax_F_fixed_comment.1}{pre-3.0$^*$} & 
+     \kcode{omp_lib} \\
+  \hexentry[f90]{fort_race.1}{pre-3.0$^*$} & \\
+  \hexentry[f90]{mem_model.1}{3.1$^*$} & \\
+  \hexentry[f]{mem_model.2}{3.1$^*$} & \\
+  \hexentry[f]{mem_model.3}{3.1$^*$} & \\
+  \hexentry[f]{collapse.3}{3.0$^*$} & \\
+  \hexentry[f]{get_nthrs.1}{pre-3.0$^*$} & \\
+  \hexentry[f]{get_nthrs.2}{pre-3.0$^*$} & \\
+  \hexentry[f]{nthrs_dynamic.1}{pre-3.0$^*$} & \\
+  \hexentry[f]{nthrs_dynamic.2}{pre-3.0$^*$} & \\
+  \hexentry[f]{parallel.1}{pre-3.0$^*$} & \\
+  \hexentry[f]{set_dynamic_nthrs.1}{pre-3.0$^*$} & \\
+  \hexentry[f]{simple_lock.1}{pre-3.0$^*$} & \\
+  \hexentry[f90]{tasking.10}{3.0$^*$} & \\[2pt]
+\hline\\[-2ex]
+  \multicolumn{3}{l}{\emph{$^*$Version tag is unchanged since
+  the replacement feature is available in the earlier version.}}\\[2pt]
 \end{supertabular}
 
 \linenumbers
+\newpage
 Table~\ref{tab:Updated Examples 5.2} lists the updated examples for
 features deprecated in OpenMP 5.2
 in the Examples Document Version \examplesref{5.2}.
@@ -224,7 +250,6 @@ the Examples Document Version \examplesref{5.1}.
 \end{supertabular}
 
 \linenumbers
-\newpage
 Table~\ref{tab:Updated Examples 5.1} lists the updated examples for
 features deprecated in OpenMP 5.1
 in the Examples Document Version \examplesref{5.1}.
@@ -262,6 +287,7 @@ the Examples Document Version \examplesref{5.0.1}.
 \end{supertabular}
 
 \linenumbers
+\newpage
 Table~\ref{tab:Updated Examples 5.0} lists the updated examples for
 features deprecated in OpenMP 5.0
 in the Examples Document Version \examplesref{5.1}.

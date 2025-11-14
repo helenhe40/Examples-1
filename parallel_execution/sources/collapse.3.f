@@ -4,7 +4,7 @@
 ! @@expect:	success
 ! @@version:	omp_3.0
       program test
-      include 'omp_lib.h'
+      use omp_lib
 !$omp parallel num_threads(2)
 !$omp do collapse(2) ordered private(j,k) schedule(static,3)
       do k = 1,3

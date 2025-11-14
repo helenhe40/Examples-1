@@ -73,7 +73,6 @@ contains
 
 end module subs
 
-
 program main
    use subs
    integer, target :: a(1000)

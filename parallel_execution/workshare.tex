@@ -23,9 +23,9 @@ DD} immediately begin work on \ucode{EE = FF} when they are done with \ucode{CC
 \fnexample{workshare}{2}
 \topmarker{Fortran}
 
-The following example shows the use of an \kcode{atomic} directive inside a \kcode{workshare} 
-construct. The computation of \ucode{SUM(AA)} is workshared, but the update to 
-\ucode{R} is atomic.
+In the following example, the computation of \ucode{SUM(AA)} is workshared. The
+scalar assignment statement that updates \ucode{R} is considered a unit of work
+that is executed once by one thread.
 
 \fnexample{workshare}{3}
 

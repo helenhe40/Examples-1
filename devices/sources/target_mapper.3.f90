@@ -21,7 +21,6 @@ module my_structures
 
 end module
 
-
 program main
   use my_structures
   external  init_mypts_array, eval_mypts_array

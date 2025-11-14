@@ -13,12 +13,12 @@ struct point {
   int y;
 };
 
-#pragma omp declare reduction(min : struct point)  \
+#pragma omp declare_reduction(min : struct point)  \
       combiner( omp_out.x = omp_in.x > omp_out.x ? omp_out.x : omp_in.x,  \
                 omp_out.y = omp_in.y > omp_out.y ? omp_out.y : omp_in.y ) \
       initializer( omp_priv = { INT_MAX, INT_MAX } )
 
-#pragma omp declare reduction(max : struct point)  \
+#pragma omp declare_reduction(max : struct point)  \
       combiner( omp_out.x = omp_in.x < omp_out.x ? omp_out.x : omp_in.x,  \
                 omp_out.y = omp_in.y < omp_out.y ? omp_out.y : omp_in.y ) \
       initializer( omp_priv = { 0, 0 } )

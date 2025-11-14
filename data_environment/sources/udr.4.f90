@@ -16,7 +16,7 @@ module data_red
   end interface
 
 ! Declare the user-defined reduction operator .add.
-!$omp declare reduction(.add. : dt)  &
+!$omp declare_reduction(.add. : dt)  &
 !$omp&  combiner( omp_out=omp_out.add.omp_in ) &
 !$omp&  initializer( dt_init(omp_priv) )
 

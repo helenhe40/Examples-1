@@ -11,9 +11,9 @@
 
 An \kcode{ordered} clause can be used on a worksharing-loop construct with an integer
 parameter argument to define the number of associated loops within 
-a \plc{doacross loop nest} where cross-iteration dependences exist.
-A \kcode{doacross} clause on an \kcode{ordered} construct within an \plc{ordered}
-loop describes the dependences of the \plc{doacross} loops. 
+a \emph{doacross loop nest} where cross-iteration dependences exist.
+A \kcode{doacross} clause on an \kcode{ordered} construct within an \emph{ordered}
+loop describes the dependences of the \emph{doacross} loops. 
 
 In the code below, the \kcode{doacross(sink:\ucode{i-1})} clause defines an \ucode{i-1} 
 to \ucode{i} cross-iteration dependence that specifies a wait point for 
@@ -33,9 +33,9 @@ specified for the statement executing the \ucode{bar} function.
 
 \ffreeexample[5.2]{doacross}{1}
 
-\pagebreak
+%\pagebreak
 The following code is similar to the previous example but with 
-the \plc{doacross loop nest} extended to two nested loops, \ucode{i} and \ucode{j},
+the \emph{doacross loop nest} extended to two nested loops, \ucode{i} and \ucode{j},
 as specified by the \kcode{ordered(\ucode{2})} clause on the worksharing-loop directive.
 In the C/C++ code, the \ucode{i} and \ucode{j} loops are the first and
 second associated loops, respectively, whereas
@@ -68,8 +68,8 @@ a deadlock as well since they may not start to execute until the current iterati
 
 
 The following example illustrates the use of the \kcode{collapse} clause for
-a \plc{doacross loop nest}.  The \ucode{i} and \ucode{j} loops are the associated
-loops for the collapsed loop as well as for the \plc{doacross loop nest}.
+a \emph{doacross loop nest}.  The \ucode{i} and \ucode{j} loops are the associated
+loops for the collapsed loop as well as for the \emph{doacross loop nest}.
 The example also shows a conforming usage of the \kcode{ordered} directive specifying a cross-iteration source
 that is placed before a corresponding \kcode{ordered} directive specifying a
 cross-iteration sink. There is no requirement that the source specification

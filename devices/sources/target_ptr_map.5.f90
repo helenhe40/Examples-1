@@ -31,7 +31,7 @@ program main
    accessible = omp_target_is_accessible(c_loc(s%ptr(1)), buf_size, dev)
 
    !$omp  begin metadirective                              &
-   !$omp&       when(user={condition(accessible)}: target) &
+   !$omp&       when(user={condition(accessible /= 0)}: target) &
    !$omp&       otherwise( target map(mapper(deep_copy),tofrom:s) )
 
       call do_work(s, n)

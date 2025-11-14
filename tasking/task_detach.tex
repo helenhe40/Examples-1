@@ -1,4 +1,4 @@
-\pagebreak
+%\pagebreak
 \section{Task Detachment}
 \label{sec:task_detachment}
 \index{task construct@\kcode{task} construct!detach clause@\kcode{detach} clause}
@@ -11,7 +11,7 @@
 % No definition of a detachable task
 
 The \kcode{detach} clause on a \kcode{task} construct provides a mechanism for an asynchronous
-routine to be called within a task block, and for the routine's
+routine to be called within a task's structured block, and for the routine's
 callback to signal completion to the OpenMP runtime, through an 
 event fulfillment, triggered by a call to the \kcode{omp_fulfill_event} routine.
 When a \kcode{detach} clause is used on a \kcode{task} construct,
@@ -20,16 +20,7 @@ block is completed AND an \plc{allow-completion} event is
 fulfilled by a call to the \kcode{omp_fulfill_event} 
 routine with the \plc{event-handle} argument.
 
-The first example illustrates the basic components used in a detachable task.
-The second example is a program that executes asynchronous IO, and illustrates 
-methods that are also inherent in asynchronous messaging within MPI and asynchronous commands in 
-streams within GPU codes.
-Interfaces to asynchronous operations found in IO, MPI and GPU parallel computing platforms
-and their programming models are not standardized. 
-
--------------------------
-
-The first example creates a detachable task
+In the following example, the program creates a detachable task
 that executes the asynchronous \ucode{async_work} routine,
 passing the \kcode{omp_fulfill_event} function and the (firstprivate) event handle
 to the function. Here, the OpenMP \kcode{omp_fulfill_event} procedure is
@@ -41,8 +32,6 @@ with the associated data, \ucode{event}.
 
 \ffreeexample[5.0]{task_detach}{1}
 \clearpage
-
-%ASYNCHRONOUS IO
 
 In the following example, text data is written asynchronously to the file \ucode{async_data},
 using POSIX asynchronous IO (aio). An aio ``control block'', \ucode{cb}, is set up to
@@ -57,7 +46,7 @@ on the (synchronous) IO to complete, and cannot perform other work while the
 operating system is performing the synchronous IO. 
 The \kcode{if} clause ensures that the detachable task is launched 
 and the call to the \ucode{aio_write} function returns
-before Task2 and Task3 are generated (while the async IO occurs in the ``background'' and eventually
+before Task2 and Task3 are generated (while the asynchronous IO occurs in the ``background'' and eventually
 executes the callback function).  The barrier at the end of the \kcode{parallel} region ensures that the
 detachable task has completed.
 

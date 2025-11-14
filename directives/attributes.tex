@@ -5,7 +5,7 @@
 \index{attribute syntax, C/C++}
 
 OpenMP directives for C/C++ can also be specified with 
-the \kcode{directive} extension for the C23 and C++11 standard \plc{attributes}.
+the \kcode{directive} extension for the C23 and C++11 standard \emph{attributes}.
 %https://en.cppreference.com/w/cpp/language/attributes
 
 The example below shows two ways to parallelize a \bcode{for} loop using the \kcode{\#pragma} syntax.
@@ -38,20 +38,20 @@ Note, for the \kcode{sequence} attribute a comma must separate the \kcode{direct
 
 
 The last 3 pairs of sections (PRAG DECL 1-2, 3-4, and 5-6) show cases where 
-directive ordering does not matter for \kcode{declare simd} directives. 
+directive ordering does not matter for \kcode{declare_simd} directives. 
 
 In section PRAG DECL 1-2, the two loops use different SIMD forms of the \ucode{P} function
 (one with \kcode{simdlen(\ucode{4})} and the other with \kcode{simdlen(\ucode{8})}), 
-as prescribed by the two different \kcode{declare simd} directives
+as prescribed by the two different \kcode{declare_simd} directives
 applied to the \ucode{P} function definitions (at the beginning of the code). 
 The directives use the pragma syntax, and order is not important. 
 For the next set of loops 
 (PRAG DECL 3-4) that use the \ucode{Q} function, the attribute syntax is 
-used for the \kcode{declare simd} directives. 
+used for the \kcode{declare_simd} directives. 
 The result is compliant code since directive order is irrelevant.
 Sections ATTR DECL 5-6 are included for completeness. Here, the attribute 
 form of the \kcode{simd} directive is used for loops calling the \ucode{Q} function, 
-in combination with the attribute form of the \kcode{declare simd} 
+in combination with the attribute form of the \kcode{declare_simd} 
 directives declaring the variants for \ucode{Q}.
 
 \topmarker{C/C++}

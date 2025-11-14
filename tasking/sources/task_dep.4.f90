@@ -16,11 +16,11 @@ program example
       !$omp end task
 
       !$omp task shared(x) depend(in: x)
-         print*, "x + 1 = ", x+1, "."
+         write(*,'(a8,i1,a2)',advance='no') "x + 1 = ", x+1, ". "
       !$omp end task
 
       !$omp task shared(x) depend(in: x)
-         print*, "x + 2 = ", x+2, "."
+         write(*,'(a8,i1,a2)',advance='no') "x + 2 = ", x+2, ". "
       !$omp end task
 
    !$omp end single

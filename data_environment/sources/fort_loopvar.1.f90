@@ -4,7 +4,7 @@
 ! @@expect:	success
 ! @@version:	pre_omp_3.0
 SUBROUTINE PLOOP_1(A,N)
-INCLUDE "omp_lib.h"      ! or USE OMP_LIB
+USE OMP_LIB
 
 REAL A(*)
 INTEGER I, MYOFFSET, N

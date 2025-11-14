@@ -8,7 +8,7 @@
 \index{target construct@\kcode{target} construct}
 \index{target construct@\kcode{target} construct!implicit mapping}
 
-This following example shows how the \kcode{target} construct offloads a code 
+The following example shows how the \kcode{target} construct offloads a code
 region to a target device. The variables \ucode{p}, \ucode{v1}, \ucode{v2}, and \ucode{N} are implicitly mapped 
 to the target device.
 
@@ -22,7 +22,7 @@ to the target device.
 \index{clauses!map@\kcode{map}}
 \index{map clause@\kcode{map} clause}
 
-This following example shows how the \kcode{target} construct offloads a code 
+The following example shows how the \kcode{target} construct offloads a code 
 region to a target device. The variables \ucode{p}, \ucode{v1} and \ucode{v2} are explicitly mapped to the 
 target device using the \kcode{map} clause. The variable \ucode{N} is implicitly mapped to 
 the target device.
@@ -145,7 +145,7 @@ to the \kcode{parallel} component of the combined directive.
 \index{directives!declare target@\kcode{declare target}}
 \index{declare target directive@\kcode{declare target} directive}
 
-Beginning with OpenMP 5.0, implementations are allowed to
+In the OpenMP Specification 5.0, a \kcode{target} region is allowed to
 offload back to the host (reverse offload).
 
 In the example below the \ucode{error_handler} function
@@ -155,7 +155,7 @@ detected in the \ucode{A} array on the device.
 This is accomplished by specifying the \plc{device-modifier}
 \kcode{ancestor} modifier, along with a device number of \ucode{1},
 to indicate that the execution is to be performed on the
-immediate parent (\plc{1st ancestor})-- the host.
+immediate parent (\emph{1st ancestor})-- the host.
 
 The \kcode{requires} directive (another 5.0 feature)
 uses the \kcode{reverse_offload} clause to guarantee
@@ -164,7 +164,7 @@ that the reverse offload is implemented.
 Note that the \kcode{declare target} directive uses the
 \kcode{device_type} clause (another 5.0 feature) to specify that
 the \ucode{error_handler} function is compiled to
-execute on the \plc{host} only. This ensures that no
+execute on the \emph{host} only. This ensures that no
 attempt will be made to create a device version of the
 function.  This feature may be necessary if the function
 exists in another compile unit.

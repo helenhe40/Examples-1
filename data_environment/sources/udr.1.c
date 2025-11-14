@@ -25,11 +25,11 @@ void maxproc ( struct point *out, struct point *in )
   if ( in->y > out->y ) out->y = in->y;
 }
 
-#pragma omp declare reduction(min : struct point) \
+#pragma omp declare_reduction(min : struct point) \
         combiner( minproc(&omp_out, &omp_in) ) \
 	initializer( omp_priv = { INT_MAX, INT_MAX } )
 
-#pragma omp declare reduction(max : struct point) \
+#pragma omp declare_reduction(max : struct point) \
         combiner( maxproc(&omp_out, &omp_in) ) \
 	initializer( omp_priv = { 0, 0 } )
 

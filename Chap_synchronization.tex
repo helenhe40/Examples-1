@@ -6,78 +6,79 @@ of a team (within a contention group) to execute the barrier and complete
 execution of all tasks within the region, before continuing past the barrier.
 
 The \kcode{critical} construct is a directive that contains a structured block. 
-The construct allows only a single thread at a time to execute the structured block (region).
-Multiple \kcode{critical} regions may exist in a parallel region, and may
-act cooperatively (only one thread at a time in all \kcode{critical} regions),
-or separately (only one thread at a time in each \kcode{critical} regions when
-a unique name is supplied on each \kcode{critical} construct).
-An optional (lock) \kcode{hint} clause may be specified on a named \kcode{critical} 
-construct to provide the OpenMP runtime guidance in selection a locking 
-mechanism.
+The construct allows only a single thread at a time to execute the region.
+Multiple \kcode{critical} regions may exist in a parallel region, and they may act
+cooperatively (only one thread at a time in all \kcode{critical} regions) or
+separately (only one thread at a time in each \kcode{critical} regions when a
+unique name is supplied on each \kcode{critical} construct). An optional (lock)
+\kcode{hint} clause may be specified on a named \kcode{critical} construct to
+provide the OpenMP runtime guidance in selecting a locking mechanism.
 
-On a finer scale the \kcode{atomic} construct allows only a single thread at 
-a time to have atomic access to a storage location involving a single read, 
-write, update or capture statement, and a limited number of combinations 
-when specifying the \kcode{capture} \plc{atomic-clause} clause.  The
-\plc{atomic-clause} clause is required for some expression statements, but is
-not required for \kcode{update} statements. The \plc{memory-order} clause can be
+On a finer-grained scale, the \kcode{atomic} construct allows only a single
+thread at a time to have atomic access to a storage location involving a single
+atomic read, write, or update statement, and a limited number of combinations
+when specifying the \kcode{capture} and \kcode{compare} \plc{extended-atomic}
+clauses.  Unlike the \kcode{read} and \kcode{write} \plc{atomic} clauses, the
+\kcode{update} \plc{atomic} clause is optional and implied for update
+statements if not explicitly specified.. The \plc{memory-order} clause can be
 used to specify the degree of memory ordering enforced by an \kcode{atomic}
-construct. From weakest to strongest, they are \kcode{relaxed} (the default),
-\plc{acquire} and/or \plc{release} clauses (specified with \kcode{acquire}, \kcode{release},
-or \kcode{acq_rel}), and \kcode{seq_cst}.  Please see the details in the
-\docref{atomic Construct} subsection of the \docref{Directives} chapter in the OpenMP
-Specifications document.
+construct. From weakest to strongest, they are \emph{relaxed} (the default),
+\emph{acquire} and/or \emph{release} (specified with \kcode{acquire},
+\kcode{release}, or \kcode{acq_rel} clauses), and \emph{sequentially consistent}
+(specified with \kcode{seq_cst}).  Please see the details in the \docref{atomic
+Construct} subsection of the \docref{Synchronization Constructs and Clauses}
+chapter in the OpenMP Specification document.
 
-% The following three sentences were stolen from the spec.
-The \kcode{ordered} construct either specifies a structured block in a loop, 
-simd, or loop SIMD region that will be executed in the order of the loop 
-iterations.  The \kcode{ordered} construct sequentializes and orders the execution
-of \kcode{ordered} regions while allowing code outside the region to run in parallel.
-
-Since OpenMP 4.5 the \kcode{ordered} construct can also be a stand-alone 
-directive that specifies cross-iteration dependences in a \plc{doacross} loop nest.
-The \kcode{depend} clause uses a \kcode{sink} \plc{dependence-type}, along with an 
-iteration vector argument (\plc{vec}) to indicate the iteration that satisfies the
-dependence.  The \kcode{depend} clause with a \kcode{source}
-\plc{dependence-type} specifies dependence satisfaction.
+The \kcode{ordered} construct may be block-associated or stand-alone. The
+block-associated form may appear in worksharing-loop (\kcode{for} or
+\kcode{do}), \kcode{simd}, or worksharing-loop SIMD (\kcode{for simd} or
+\kcode{do simd}) region. It sequentializes and orders the execution of the
+\kcode{ordered} regions while allowing code outside the region to run in
+parallel. The stand-alone \kcode{ordered} construct specifies cross-iteration
+dependences in a \emph{doacross} loop nest. The \kcode{doacross} clause uses a
+\kcode{sink} \plc{dependence-type}, along with an iteration vector argument
+(\plc{vec}) to indicate the iteration that satisfies the dependence.  The
+\kcode{doacross} clause with a \kcode{source} \plc{dependence-type} (and
+optional \kcode{omp_curr_iteration} keyword as the iteration vector
+representing the current iteration) specifies dependence satisfaction.
 
 The \kcode{flush} directive is a stand-alone construct for enforcing consistency
 between a thread's view of memory and the view of memory for other threads (see
 the Memory Model chapter of this document for more details). When the construct
-is used with an explicit variable list, a \plc{strong flush} that forces a
+is used with an explicit variable list, a \emph{strong flush} that forces a
 thread's temporary view of memory to be consistent with the actual memory is
 applied to all listed variables. When the construct is used without an explicit
-variable list and without a \plc{memory-order} clause, a strong flush is
-applied to all locally thread-visible data as defined by the base language, and
-additionally the construct provides both acquire and release memory ordering
-semantics.  When an explicit variable list is not present and a
-\plc{memory-order} clause is present, the construct provides acquire and/or
+variable list and either without a \plc{memory-order} clause or with the
+\kcode{seq_cst} \plc{memory-order} clause, a strong flush is applied to all
+locally thread-visible data as defined by the base language, and additionally
+the construct provides both acquire and release memory ordering semantics.
+When an explicit variable list is not present and a \plc{memory-order} clause
+other than \kcode{seq_cst} is present, the construct provides acquire and/or
 release memory ordering semantics according to the \plc{memory-order} clause,
 but no strong flush is performed. A resulting strong flush that applies to a
-set of variables effectively ensures that no memory (load or store)
-operation for the affected variables may be reordered across the \kcode{flush}
-directive.
+set of variables effectively ensures that no memory (load or store) operation
+for the affected variables may be reordered across the \kcode{flush} directive.
 
 General-purpose routines provide mutual exclusion semantics through locks, 
 represented by lock variables.  
-The semantics allows a task to \plc{set}, and hence 
-\plc{own} a lock, until it is \plc{unset} by the task that set it. A 
-\plc{nestable} lock can be set multiple times by a task, and is used
-when in code requires nested control of locks.  A \plc{simple lock} can
+The semantics allows a task to \emph{set}, and hence 
+\emph{own} a lock, until it is \emph{unset} by the task that set it. A 
+\emph{nestable} lock can be set multiple times by a task, and is used
+when in code requires nested control of locks.  A \emph{simple lock} can
 only be set once by the owning task. There are specific calls for the two
 types of locks, and the variable of a specific lock type cannot be used by the
 other lock type.  
 
-Any explicit task will observe the synchronization prescribed in a 
-\kcode{barrier} construct and an implied barrier.  Also, additional synchronizations 
-are available for tasks.  All children of a task will wait at a \kcode{taskwait} (for 
-their siblings to complete).  A \kcode{taskgroup} construct creates a region in which the
-current task is suspended at the end of the region until all sibling tasks, 
-and their descendants, have completed. 
-Scheduling constraints on task execution can be prescribed by the \kcode{depend}
-clause to enforce dependence on previously generated tasks.
-More details on controlling task executions can be found in the \docref{Tasking} Chapter
-in the OpenMP Specifications document. %(DO REF. RIGHT.)
+Any explicit task will observe the synchronization prescribed in a
+\kcode{barrier} construct and an implied barrier.  Also, additional
+synchronizations are available for tasks.  A task will wait at a
+\kcode{taskwait} for all of its child tasks to complete.  A \kcode{taskgroup}
+construct creates a region in which the current task is suspended at the end of
+the region until all child tasks, and their descendants, have completed.
+Scheduling constraints on task execution can be prescribed by the
+\kcode{depend} clause to enforce a dependence on previously generated tasks.
+More details on controlling task executions can be found in the \docref{Tasking
+Constructs} chapter in the OpenMP Specifications document. %(DO REF. RIGHT.)
 
 
 %===== Examples Sections =====
@@ -98,4 +99,5 @@ in the OpenMP Specifications document. %(DO REF. RIGHT.)
 \input{synchronization/lock_owner}
 \input{synchronization/simple_lock}
 \input{synchronization/nestable_lock}
+\input{synchronization/safesync}
 

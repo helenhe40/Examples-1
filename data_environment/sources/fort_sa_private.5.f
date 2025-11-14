@@ -8,7 +8,7 @@
 
         ! This use of X does not conform to the
         ! specification. It would be legal Fortran 90,
-        ! but the OpenMP private directive allows the
+        ! but the OpenMP private clause allows the
         ! compiler to break the sequence association that
         ! A had with the rest of the common block.
 

@@ -96,12 +96,6 @@ The period (.) indicates that the field is displayed right-justified (default is
 and the ``0'' indicates that any unused space is to be prefixed with zeros
 (e.g. instead of ``1'', ``0001'' is displayed for the field size of 4).
 
-%The period (.) indicates that the field is displayed left-justified and the ``0'' indicates
-%that leading zeros are to be added so that the total length for the display of this “n” (thread_num) field is 4.
-
-%The period (\plc{.}) indicates right justified and \plc{0} leading zeros.  
-%All other text in the format is just user narrative.
-
 \index{affinity display!omp_capture_affinity routine@\kcode{omp_capture_affinity} routine}
 \index{routines!omp_capture_affinity@\kcode{omp_capture_affinity}}
 \index{omp_capture_affinity routine@\kcode{omp_capture_affinity} routine}
@@ -112,9 +106,6 @@ After the parallel region, the thread affinities are printed in thread-number or
 
 If the storage area in buffer is inadequate for holding the affinity
 data, the stored affinity data is truncated.  
-%The \plc{max} reduction on the required storage, returned by 
-%\code{omp\_capture\_affinity} in \plc{nchars}, is used to report 
-%possible truncation (if \plc{max\_req\_store}  >  \plc{buffer\_store}).
 The maximum value for the number of characters (\ucode{nchars}) returned by 
 \kcode{omp_capture_affinity} is captured by the \kcode{reduction(max: \ucode{max_req_store})}
 clause and the \ucode{if(nchars >= max_req_store) max_req_store=nchars} statement. 

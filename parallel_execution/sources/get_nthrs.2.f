@@ -11,7 +11,7 @@
       END SUBROUTINE WORK
 
       SUBROUTINE CORRECT()
-        INCLUDE "omp_lib.h"     ! or USE OMP_LIB
+        USE OMP_LIB
         INTEGER I
 
 !$OMP    PARALLEL PRIVATE(I)

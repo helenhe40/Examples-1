@@ -15,9 +15,9 @@ void foo_variant1()
 void foo_variant2()
 { printf("in foo_variant2\n"); }
  
-#pragma omp declare variant(foo_variant1) \
+#pragma omp declare_variant(foo_variant1) \
                     match(user={condition(foo_sub)}) 
-#pragma omp declare variant(foo_variant2) \
+#pragma omp declare_variant(foo_variant2) \
                     match(construct={dispatch},user={condition(foo_sub)}) 
 void foo()
 { printf("in foo\n"); }
@@ -54,6 +54,11 @@ int main()
    foo_sub = 1;  
    #pragma omp dispatch nocontext(1)
    foo();        // "in foo_variant1"
+   
+   // Case 7
+   foo_sub = 1; 
+   #pragma omp dispatch nocontext(1) novariants(1)
+    foo();     // "in foo"
 
    return 0;
 }

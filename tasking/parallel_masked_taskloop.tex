@@ -28,7 +28,7 @@ The same OpenMP operations for the first taskloop are accomplished by the second
 taskloop with the \kcode{parallel masked taskloop} 
 combined construct. 
 The third taskloop uses the combined \kcode{parallel masked taskloop simd} 
-construct to accomplish the same behavior as closely nested \kcode{parallel masked},
+construct to accomplish the same behavior as immediately nested \kcode{parallel masked},
 and \kcode{taskloop simd} constructs.
 
 As with any combined construct the clauses of the components may be used
@@ -37,6 +37,5 @@ with the \kcode{taskloop} or \kcode{taskloop simd} construct produces no additio
 restrictions.
 
 \cexample[5.1]{parallel_masked_taskloop}{1}
-\clearpage
 
 \ffreeexample[5.1]{parallel_masked_taskloop}{1}

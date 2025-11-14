@@ -1,5 +1,5 @@
 %\pagebreak
-\section{\kcode{simd} and \kcode{declare simd} Directives}
+\section{\kcode{simd} and \kcode{declare_simd} Directives}
 \label{sec:SIMD}
 
 \index{constructs!simd@\kcode{simd}}
@@ -12,8 +12,8 @@ to assure the compiler that the loop can be vectorized.
 \ffreeexample[4.0]{SIMD}{1}
  
 
-\index{directives!declare simd@\kcode{declare simd}}
-\index{declare simd directive@\kcode{declare simd} directive}
+\index{directives!declare_simd@\kcode{declare_simd}}
+\index{declare_simd directive@\kcode{declare_simd} directive}
 \index{clauses!uniform@\kcode{uniform}}
 \index{uniform clause@\kcode{uniform} clause}
 \index{clauses!linear@\kcode{linear}}
@@ -22,21 +22,21 @@ When a function can be inlined within a loop the compiler has an opportunity to
 vectorize the loop. By guaranteeing SIMD behavior of a function's operations, 
 characterizing the arguments of the function and privatizing temporary 
 variables of the loop, the compiler can often create faster, vector code for 
-the loop. In the examples below the \kcode{declare simd} directive is 
+the loop. In the examples below the \kcode{declare_simd} directive is 
 used on the \ucode{add1} and \ucode{add2} functions to enable creation of their 
 corresponding SIMD function versions for execution within the associated SIMD 
 loop. The functions characterize two different approaches of accessing data 
 within the function: by a single variable and as an element in a data array, 
 respectively. The \ucode{add3} C function uses dereferencing.
 
-The \kcode{declare simd} directives also illustrate the use of 
+The \kcode{declare_simd} directives also illustrate the use of 
 \kcode{uniform} and \kcode{linear} clauses.  The \kcode{uniform(\ucode{fact})} clause 
 indicates that the variable \ucode{fact} is invariant across the SIMD lanes. In 
 the \ucode{add2} function \ucode{a} and \ucode{b} are included in the \kcode{uniform} 
 list because the C pointer and the Fortran array references are constant.  The 
 \ucode{i} index used in the \ucode{add2} function is included in a \kcode{linear} 
 clause with a constant-linear-step of 1, to guarantee a unity increment of the 
-associated loop. In the \kcode{declare simd} directive for the \ucode{add3} 
+associated loop. In the \kcode{declare_simd} directive for the \ucode{add3} 
 C function the  \kcode{linear(\ucode{a,b:1})} clause instructs the compiler to generate 
 unit-stride loads across the SIMD lanes; otherwise,  costly \emph{gather} 
 instructions would be generated for the unknown sequence of access of the 
@@ -106,7 +106,7 @@ chunks are executed in the lanes of the vector units.
 \index{clauses!notinbranch@\kcode{notinbranch}}
 \index{notinbranch clause@\kcode{notinbranch} clause}
 
-The following examples illustrate the use of the \kcode{declare simd} 
+The following examples illustrate the use of the \kcode{declare_simd} 
 directive with the \kcode{inbranch} and \kcode{notinbranch} clauses. The 
 \kcode{notinbranch} clause informs the compiler that the function \ucode{foo} is 
 never called conditionally in the SIMD loop of the function \ucode{myaddint}. On 

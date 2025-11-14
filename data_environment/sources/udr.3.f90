@@ -10,7 +10,7 @@ program max_loc
       integer index
    end type
 
-   !$omp declare reduction(maxloc: mx_s)  &
+   !$omp declare_reduction(maxloc: mx_s)  &
    !$omp&        combiner( mx_combine(omp_out, omp_in) )  &
    !$omp&        initializer( mx_init(omp_priv, omp_orig) )
 

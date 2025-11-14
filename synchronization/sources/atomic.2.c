@@ -19,8 +19,7 @@ int atomic_read(const int *p)
 void atomic_write(int *p, int value)
 {
 /* Guarantee that value is stored atomically into *p. No part of *p can
-change
- * until after the entire write operation is completed.
+ * change until after the entire write operation is completed.
  */
 #pragma omp atomic write
     *p = value;

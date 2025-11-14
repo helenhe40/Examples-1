@@ -5,7 +5,7 @@
 \index{interop construct@\kcode{interop} construct}
 
 The \kcode{interop} construct allows OpenMP to interoperate with foreign runtime environments.
-In the example below, asynchronous cuda memory copies and a \ucode{cublasDaxpy} routine are executed 
+In the example below, asynchronous cuda memory copies and a \ucode{cublasDaxpy} procedure are executed 
 in a cuda stream. Also, an asynchronous target task execution (having a \kcode{nowait} clause) 
 and two explicit tasks are executed through OpenMP directives.  Scheduling dependences (synchronization) are
 imposed on the foreign stream and the OpenMP tasks through \kcode{depend} clauses. 
@@ -34,7 +34,7 @@ that the cuda runtime (\kcode{omp_ifr_cuda}) is available.
 \index{interop construct@\kcode{interop} construct!destroy clause@\kcode{destroy} clause}
 \index{destroy clause@\kcode{destroy} clause}
 \index{clauses!destroy@\kcode{destroy}}
-Within the block for executing the \ucode{cublasDaxpy} routine, a stream is acquired 
+Within the block for executing the \ucode{cublasDaxpy} procedure, a stream is acquired 
 with the \kcode{omp_get_interop_ptr} routine, which returns a cuda stream (\ucode{s}).
 The stream is included in the cublas handle, and used directly in the asynchronous memory
 routines.  The following \kcode{interop} construct, with the \kcode{destroy} clause, 

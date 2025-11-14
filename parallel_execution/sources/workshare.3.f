@@ -11,8 +11,7 @@
 !$OMP   PARALLEL
 !$OMP     WORKSHARE
             AA = BB
-!$OMP       ATOMIC UPDATE
-              R = R + SUM(AA)
+            R = R + SUM(AA)
             CC = DD
 !$OMP     END WORKSHARE
 !$OMP   END PARALLEL

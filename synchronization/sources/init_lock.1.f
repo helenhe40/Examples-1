@@ -4,7 +4,7 @@
 ! @@expect:	success
 ! @@version:	pre_omp_3.0
       FUNCTION NEW_LOCKS()
-        USE OMP_LIB        ! or INCLUDE "omp_lib.h"
+        USE OMP_LIB
         INTEGER(OMP_LOCK_KIND), DIMENSION(1000) :: NEW_LOCKS
         INTEGER I
 

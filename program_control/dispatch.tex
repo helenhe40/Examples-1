@@ -1,4 +1,4 @@
-\pagebreak
+%\pagebreak
 \section{\kcode{dispatch} Construct}
 \label{sec:dispatch}
 
@@ -18,7 +18,7 @@ procedure call to control variant substitution for the called procedure.
 
 In the example below, the \ucode{foo_variant1()} and \ucode{foo_variant2()}
 procedures are declared as variants for \ucode{foo()} using the
-\kcode{declare variant} directive, with matching requirements specified
+\kcode{declare_variant} directive, with matching requirements specified
 by the \kcode{match} clause's context selector. To be selected for
 substitution, both variants require that the condition \ucode{foo_sub} evaluates
 to \plc{true}.
@@ -55,6 +55,12 @@ In Case 6, the  \kcode{nocontext} clause directs the implementation to not
 include the \kcode{dispatch} construct in the OpenMP context at the call site
 for \ucode{foo()}. Hence, the \ucode{foo_variant2()} variant is not considered
 and \ucode{foo_variant1()} is instead selected for variant substitution.
+
+In Case 7, the \kcode{novariants} clause disables variant
+substitution for the call to \ucode{foo()}. Normally the  \kcode{nocontext} clause 
+directs the implementation to not include the \kcode{dispatch} construct, but since 
+variant substitution is already disabled, the base function \ucode{foo()} will be 
+called.
 
       \cexample[6.0]{dispatch}{1}
   \ffreeexample[6.0]{dispatch}{1}

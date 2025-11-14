@@ -16,9 +16,9 @@ contains
   end subroutine
 
   subroutine foo()
-    !$omp  declare variant(foo_variant1) &
+    !$omp  declare_variant(foo_variant1) &
     !$omp&         match(user={condition(foo_sub)}) 
-    !$omp  declare variant(foo_variant2) &
+    !$omp  declare_variant(foo_variant2) &
     !$omp          match(construct={dispatch},user={condition(foo_sub)}) 
     print*, "in foo"
   end subroutine
@@ -46,17 +46,22 @@ program main
   !! Case 4
   foo_sub = .TRUE.
   !$omp dispatch
-  call foo();        !! "in foo_variant2"
+  call foo()         !! "in foo_variant2"
                      !! see discussion for OpenMP 5.1/5.2
 
   !! Case 5
   foo_sub = .TRUE.
   !$omp dispatch novariants(.true.)
-  call foo();        !!  "in foo"
+  call foo()         !!  "in foo"
 
   !! Case 6
   foo_sub = .TRUE.
   !$omp dispatch nocontext(.true.)
-  call foo();        !! "in foo_variant1"
+  call foo()         !! "in foo_variant1"
+  
+  !! Case 7
+  foo_sub = .TRUE.
+  !$omp dispatch novariants(.true.) nocontext(.true.)
+  call foo()         !!  "in foo"
 
 end program 

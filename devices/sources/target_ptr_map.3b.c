@@ -3,14 +3,14 @@
 * @@type:	C
 * @@operation:	compile
 * @@expect:	success
-* @@version:	omp_5.1
+* @@version:	omp_6.0
 */
-#define N 100
 
-int x[N], y[N];
-#pragma omp begin declare target
+#include <stdio.h>
+
+int x[2], y[2];
 int *p1;
-#pragma omp end declare target
+#pragma omp declare_target enter(p1)
 int *p2;
 
 int foo()
@@ -18,22 +18,25 @@ int foo()
   p1 = &x[0];
   p2 = &y[0];
 
-  // Explicitly map array section y[:N]
-  #pragma omp target enter data map(y[:N])
+  #pragma omp target_data map(p1[:2], y)
+  { // device p1 becomes attached to device p1[:2]
+    #pragma omp target // implicit map(x, y, p1, p2[:])
+                       // p2 is predetermined firstprivate
+    {
+      // Accessing the mapped arrays x,y is OK here.
+      x[0] = 1;
+      y[0] = 2;
 
-  #pragma omp target map(x[:N]) map(p1[:N]) map(p2[:0])
-  {
-    // Accessing the mapped arrays x,y is OK here.
-    x[0] = 1;
-    y[1] = 2;
-
-    // Pointer attachment for p1 occurs here when array x is mapped
-    //   on the target construct (as p1 = &x[0] on the device)
-    p1[0] = 3;      // accessing p1 is OK
-
-    // p2 in the target region is initialized to &y[0]
-    p2[1] = 4;      // accessing p2 is OK
+      p1[1] = 3; // ok, p1 attached to x
+      p2[1] = 4; // ok prior to OpenMP 6.0: firstprivate p2
+                 // points to y
+    }
   }
+
+  // prints x = 1, 3
+  printf(" x = %d, %d\n", x[0], x[1]);
+  // prints y = 2, 4
+  printf(" y = %d, %d\n", y[0], y[1]);
 
   return 0;
 }

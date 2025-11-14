@@ -2,7 +2,7 @@
 \label{chap:directive_syntax}
 \index{directive syntax}
 
-OpenMP \plc{directives} use base-language mechanisms to specify OpenMP program behavior.
+OpenMP \emph{directives} use base-language mechanisms to specify OpenMP program behavior.
 In C/C++ code, the directives are formed with 
 either pragmas or attributes.
 Fortran directives are formed with comments in free form and fixed form sources (codes).
@@ -61,11 +61,16 @@ For Fortran, a declarative directive (such as \kcode{declare reduction})
 must appear after any \bcode{USE}, \bcode{IMPORT}, and \bcode{IMPLICIT} statements
 in the specification part.
 
+In OpenMP 6.0, white spaces in some directive names are replaced with
+underscores, but the old form is still supported.  For example, 
+both \kcode{declare reduction} and \kcode{declare_reduction}
+are valid directive names.
+
 
 %===== Examples Sections =====
 \input{directives/pragmas}
 \input{directives/attributes}
 \input{directives/fixed_format_comments}
 \input{directives/free_format_comments}
-
+\input{directives/compound_directive_names}
 

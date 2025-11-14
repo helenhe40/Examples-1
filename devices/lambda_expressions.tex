@@ -19,7 +19,7 @@ exit from the \kcode{target} construct.
 
 In Case 2, a lambda expression is instead defined before the \kcode{target}
 construct and captures (by copy) the pointer \ucode{sp}. A
-\kcode{target data} construct is used to first map the structure, and
+\kcode{target_data} construct is used to first map the structure, and
 then the \kcode{target} construct implicitly maps the closure object
 referenced by \ucode{lambda2}, a zero-length array section based on the
 structure pointer \ucode{sp}, and a zero-length array section based on the
@@ -30,7 +30,7 @@ from the corresponding structure.
 
 Case 3 is similar to Case 2, except \ucode{s} is instead captured by
 reference by the lambda expression. As for Case 2, the structure is first
-mapped by an enclosing \kcode{target data} construct, and then the
+mapped by an enclosing \kcode{target_data} construct, and then the
 \kcode{target} construct implicitly maps \ucode{s} and the closure object
 referenced by \ucode{lambda3}. The effect of the map is to make the
 the call for \ucode{lambda3} refer to the corresponding \ucode{s} inside the
@@ -41,10 +41,10 @@ structure type as \ucode{s}. While the body of the lambda expression refers
 to \ucode{ss}, it is not captured. In order for \ucode{lambda4} to be
 callable in the \kcode{target} region, the reference to \ucode{ss} should be
 to a device copy of \ucode{ss} that also has static storage. This is achieved
-with the use of the \kcode{declare target} directive.  Inside the
+with the use of the \kcode{declare_target} directive.  Inside the
 \kcode{target} construct, all references to \ucode{ss}, including in the
 \ucode{lambda4} call, will refer to the corresponding \ucode{ss} that
-results from the \kcode{declare target} directive. The \kcode{always}
+results from the \kcode{declare_target} directive. The \kcode{always}
 modifier is used on the \kcode{map} clause to transfer the updated values for
 the structure back to the host device.
 

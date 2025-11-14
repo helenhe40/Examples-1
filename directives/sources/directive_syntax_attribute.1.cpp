@@ -10,12 +10,12 @@
 #define NT 4
 #define thrd_no omp_get_thread_num
 
-#pragma omp declare simd linear(i) simdlen(4)
-#pragma omp declare simd linear(i) simdlen(8)
+#pragma omp declare_simd linear(i) simdlen(4)
+#pragma omp declare_simd linear(i) simdlen(8)
 double P(int i){ return (double)i * (double)i; }
 
-[[omp::directive(declare simd linear(i) simdlen(4))]]
-[[omp::directive(declare simd linear(i) simdlen(8))]]
+[[omp::directive(declare_simd linear(i) simdlen(4))]]
+[[omp::directive(declare_simd linear(i) simdlen(8))]]
 double Q(int i){ return (double)i * (double)i; }
 
 int main() {

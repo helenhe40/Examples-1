@@ -1,27 +1,27 @@
 \cchapter{Parallel Execution}{parallel_execution}
 \label{chap:parallel_execution}
 
-A single thread, the \plc{initial thread}, begins sequential execution of 
+A single thread, the \emph{initial thread}, begins sequential execution of 
 an OpenMP enabled program, as if the whole program is in an implicit parallel
-region consisting of an implicit task executed by the \plc{initial thread}.
+region consisting of an implicit task executed by the initial thread.
 
 A \kcode{parallel} construct encloses code, 
-forming a parallel region.  An \plc{initial thread} encountering a \kcode{parallel} 
+forming a parallel region.  An initial thread encountering a \kcode{parallel} 
 region forks (creates) a team of threads at the beginning of the 
 \kcode{parallel} region, and joins them (removes from execution) at the 
-end of the region.  The initial thread becomes the primary thread of the team in a 
-\kcode{parallel} region with a \plc{thread} number equal to zero, the other 
+end of the region.  The initial thread becomes the \emph{primary} thread of the team in a 
+\kcode{parallel} region with a thread number equal to zero, the other 
 threads are numbered from 1 to number of threads minus 1. 
 A team may be comprised of just a single thread.
 
-Each \plc{thread} of a team is assigned an implicit task consisting of code within the 
+Each thread of a team is assigned an implicit task consisting of code within the 
 \kcode{parallel} region. The task that creates a \kcode{parallel} region is suspended while the
 tasks of the team are executed.  A thread is tied to its task; that is,
 only the thread assigned to the task can execute that task.  After completion 
 of the \kcode{parallel} region, the primary thread resumes execution of the generating task.  
 
 %After the \code{parallel} region the primary thread becomes the initial 
-%thread again, and continues to execute the \plc{sequential part}.  
+%thread again, and continues to execute the \emph{sequential part}.  
 
 Any task within a \kcode{parallel} region is allowed to encounter another
 \kcode{parallel} region to form a nested \kcode{parallel} region. The 
@@ -34,7 +34,7 @@ The number of threads of a \kcode{parallel} region can be set by the \kcode{OMP_
 environment variable, the \kcode{omp_set_num_threads()} routine, or on the \kcode{parallel} 
 directive with the \kcode{num_threads}
 clause. The routine overrides the environment variable, and the clause overrides all. 
-Use the \kcode{OMP_DYNAMIC}
+Use the \kcode{OMP_DYNAMIC} environment variable
 or the \kcode{omp_set_dynamic()} function to specify that the OpenMP
 implementation dynamically adjust the number of threads for
 \kcode{parallel} regions. The default setting for dynamic adjustment is implementation
@@ -63,15 +63,15 @@ The worksharing constructs are:
 
 \end{compactitem}
 
-The \kcode{for} and \kcode{do} constructs (loop constructs) create a region 
-consisting of a loop.  A loop controlled by a loop construct is called 
-an \plc{associated} loop.  Nested loops can form a single region when the 
+The loop constructs (\kcode{for} and \kcode{do}) create a region 
+consisting of a loop.  The loop controlled by a loop construct is called 
+an \emph{associated loop}.  Nested loops can form a single region when the 
 \kcode{collapse} clause (with an integer argument) designates the number of 
-\plc{associated} loops to be executed in parallel, by forming a 
-``single iteration space'' for the specified number of nested loops.
+associated loops to be executed in parallel, by forming a 
+\emph{single iteration space} for the specified number of nested loops.
 The \kcode{ordered} clause can also control multiple associated loops.
 
-An associated loop must adhere to a ``canonical form'' (specified in the
+An associated loop must adhere to a \emph{canonical form} (specified in the
 \docref{Canonical Loop Form} of the OpenMP Specifications document) which allows the 
 iteration count (of all associated loops) to be computed before the 
 (outermost) loop is executed. %[58:27-29].  
@@ -82,13 +82,12 @@ of the team) executes the region.
 The other threads wait at the implied 
 barrier at the end, unless the \kcode{nowait} clause is specified.
 
-The \kcode{sections} construct forms a region that contains one or more 
-structured blocks.  Each block of a \kcode{sections} directive is 
-constructed with a \kcode{section} construct, and executed once by 
+A \kcode{sections} construct forms a region that contains one or more 
+structured blocks.  Each block of the \kcode{sections} construct is 
+separated by a \kcode{section} directive, and executed once by 
 one of the threads (any one) in the team.  (If only one block is 
-formed in the region, the \kcode{section} construct, which is used to
-separate blocks, is not required.)
-The other threads wait at the implied 
+formed in the region, the \kcode{section} directive is not required.)
+The other threads wait at the implicit 
 barrier at the end, unless the \kcode{nowait} clause is specified.
 
 
@@ -103,7 +102,7 @@ MASKED CONSTRUCT
 The \kcode{masked} construct is not a worksharing construct.  The \kcode{masked} region is
 executed only by the primary thread. There is no implicit barrier (and flush) 
 at the end of the \kcode{masked} region; hence the other threads of the team continue
-execution beyond code statements beyond the \kcode{masked} region.
+execution of code statements beyond the \kcode{masked} region.
 The \kcode{master} construct, which has been deprecated in OpenMP 5.1, has identical semantics
 to the \kcode{masked} construct with no \kcode{filter} clause.
 

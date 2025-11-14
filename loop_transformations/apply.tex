@@ -1,4 +1,4 @@
-\pagebreak
+%\pagebreak
 \section{\kcode{apply} Clause}
 \label{sec:apply_clause}
 
@@ -26,7 +26,7 @@ Also, an applied directive within a clause may specify another \kcode{apply} cla
 
 Any nested loop transformation constructs including any constructs that
 result from \kcode{apply} clauses of nested constructs are replaced before any enclosing
-loop transformation construct. This is referred to as the \plc{innermost-first order}
+loop transformation construct. This is referred to as the \emph{innermost-first order}
 here.
 
 \subsection{Syntax and Effect}
@@ -37,7 +37,7 @@ directive to the outermost generated (grid) loop of the \kcode{tile} construct t
 In function \ucode{construct_unroll}, the tile transformation creates the generated (tiled) loops
 and then the \kcode{unroll} construct is applied to outermost loop of the replacement.
 In the \ucode{apply_unroll} function, the \kcode{apply} clause on the \kcode{tile} construct
-is used to apply an \kcode{unroll} transformation on the \plc{grid} loop (the outermost loop
+is used to apply an \kcode{unroll} transformation on the \emph{grid} loop (the outermost loop
 of the tile transformation) as specified by the \kcode{grid} modifier.
 
 \cexample[6.0]{apply_syntax}{1}
@@ -54,15 +54,18 @@ or \kcode{apply} clause.
 
 The following example shows how multiple loop transformation directives
 can be applied to different generated loops resulting from a loop transformation.
-For the 4x4 \kcode{tile} construct there will be two (outer) \plc{grid} loops and two (inner) \plc{intra-tile} loops.
-The first \kcode{apply} clause specifies that the two \plc{grid} loops are to have an \kcode{interchange} directive and a \kcode{nothing} directive
-(just a placeholder to indicate no directive application) applied to the grid (two outermost) loops.
-Directives, read from left to right, are applied to the \plc{grid} loops, from outermost to innermost, respectively.
-The second \kcode{apply} clause specifies that the two \plc{intratile} loops are to have \kcode{nothing} and \kcode{interchange} directives applied to the
-last two \plc{tile} loops, respectively.
-Note that the \ucode{A} array dimensions are \ucode{A[100][100][3]} and \ucode{A(0:2,0:99,0:99)}
-in the C/C++ and Fortran codes to illustrate equivalent sequential memory access for the
-\ucode{i}, \ucode{j} and \ucode{k} loops.
+For the 4x4 \kcode{tile} construct there will be two (outer) \emph{grid} loops
+and two (inner) \emph{tile} loops. The first \kcode{apply} clause specifies
+that the transformed loop nest is to have an \kcode{interchange} directive and
+a \kcode{nothing} directive (just a placeholder to indicate no directive
+application) applied to the grid loops. Directives, read from left to right,
+are applied to the grid loops, from outermost to innermost, respectively. The
+second \kcode{apply} clause specifies that transformed loop nest is to have
+\kcode{nothing} and \kcode{interchange} directives applied to the two tile
+loops, respectively. Note that the \ucode{A} array dimensions are
+\ucode{A[100][100][3]} and \ucode{A(0:2,0:99,0:99)} in the C/C++ and Fortran
+codes to illustrate equivalent sequential memory access for the \ucode{i},
+\ucode{j} and \ucode{k} loops.
 
 \index{interchange directive@\kcode{interchange} directive}
 \index{directives!interchange@\kcode{interchange}}
@@ -107,6 +110,33 @@ of the above example as follows.
 \pagebreak
 \ffreeexample[6.0]{apply_syntax_equivalent}{3}
 
+The next example illustrates splitting a loop between a host and a device,
+with the assistance of the \kcode{apply} clause.
+A loop with an iteration count \ucode{n} is split into two loops of \ucode{m} and 
+\ucode{n-m} counts by the \kcode{counts(\ucode{m},omp_fill)} clause. The 
+\kcode{apply} clause specifies that the \kcode{target loop} 
+directive is applied to the first loop for offloading to the device, 
+and the \kcode{parallel do|for}
+directive is applied to the second loop for execution on the host.
+
+The \ucode{split_composable_equivalent} routine shows the semantic 
+equivalent of the \kcode{split} construct with the \kcode{apply} clause.
+
+    \cexample[6.0]{apply_split}{1}
+\ffreeexample[6.0]{apply_split}{1}
+
+The next example illustrates the application of a split transformation 
+in an \kcode{apply}
+clause after fusing two loops with a \code{fuse} construct.
+This is possible because a fused loop of an \kcode{fuse} construct is 
+a canonical loop.
+The first of the two \emph{equivalent} routines shows an intermediate case, where
+only the fusion of the \kcode{fuse} construct is performed, and the second equivalent routine
+shows the results of applying the \kcode{split} construct of the intermediate case.
+
+\cexample[6.0]{apply_split}{2}
+\ffreeexample[6.0]{apply_split}{2}
+
 
 \subsection{Spanning Loop Associations}
 
@@ -148,3 +178,4 @@ a possible chain of transformations but done manually by a user.
 
 \cexample[6.0]{apply_nested_equivalent}{1}
 \ffreeexample[6.0]{apply_nested_equivalent}{1}
+

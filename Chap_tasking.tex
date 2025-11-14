@@ -19,7 +19,6 @@ often enqueued, and then dequeued for execution by any of the threads of the
 team within a parallel region. The generation of tasks can be from a single 
 generating thread (creating sibling tasks), or from multiple generators
 in a recursive graph tree traversals. 
-%(creating a parent-descendents hierarchy of tasks, see example 4 and 7  below). 
 A \kcode{taskloop} construct
 bundles iterations of an associated loop into tasks, and provides 
 similar controls found in the \kcode{task} construct.
@@ -34,20 +33,19 @@ Various clauses can be used to manage and optimize task generation,
 as well as reduce the overhead of execution and to relinquish 
 control of threads for work balance and forward progress. 
 
-Once a thread starts executing a task, it is the designated thread 
+Once a thread starts executing a task, it is the designated thread
 for executing the task to completion, even though it may leave the
-execution at a scheduling point and return later.  The thread is \plc{tied}
+execution at a scheduling point and return later.  The thread is \emph{tied}
 to the task.  Scheduling points can be introduced with the \kcode{taskyield}
 construct.  With an \kcode{untied} clause any other thread is allowed to continue
-the task.  An \kcode{if} clause with an expression that evaluates to \plc{false} 
-results in an \plc{undeferred} task, which instructs the runtime to suspend
+the task.  An \kcode{if} clause with an expression that evaluates to \vcode{false}
+results in an \emph{undeferred} task, which instructs the runtime to suspend
 the generating task until the undeferred task completes its execution.
 By including the data environment of the generating task into the generated task with the 
 \kcode{mergeable} and \kcode{final} clauses, task generation overhead can be reduced.
 
 A complete list of the tasking constructs and details of their clauses
-can be found in the \docref{Tasking Constructs} chapter of the OpenMP Specifications.
-%in the \docref{OpenMP Application Programming Interface} section.
+can be found in the \docref{Tasking Constructs} chapter of the OpenMP Specification.
 
 
 %===== Examples Sections =====
@@ -60,4 +58,6 @@ can be found in the \docref{Tasking Constructs} chapter of the OpenMP Specificat
 \input{tasking/taskloop}
 \input{tasking/parallel_masked_taskloop}
 \input{tasking/taskloop_dep}
+\input{tasking/free_agent}
+\input{tasking/taskgraph}
 

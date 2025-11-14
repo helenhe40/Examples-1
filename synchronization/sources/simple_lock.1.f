@@ -11,7 +11,7 @@
 
       PROGRAM SIMPLELOCK
 
-        INCLUDE "omp_lib.h"     ! or USE OMP_LIB
+        USE OMP_LIB
 
         INTEGER(OMP_LOCK_KIND) LCK
         INTEGER ID

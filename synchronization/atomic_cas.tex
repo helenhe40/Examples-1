@@ -1,5 +1,4 @@
 %\pagebreak
-\begin{ccppspecific}[4ex]
 \section{Atomic Compare}
 \label{sec:cas}
 
@@ -10,35 +9,50 @@
 \index{capture clause@\kcode{capture} clause}
 \index{compare clause@\kcode{compare} clause}
 
-In OpenMP 5.1 the \kcode{compare} clause was added to the \plc{extended-atomic} clauses.
+The \kcode{compare} clause was added to the \plc{extended-atomic} clauses
+for C/C++ in OpenMP 5.1 and extended to Fortran in OpenMP 6.0.
 The \kcode{compare} clause extends the semantics to perform the \kcode{atomic}
 update conditionally. 
 
-In the following C/C++ example, two formats of structured blocks
+In the following example, two formats of structured blocks
 are shown for associated \kcode{atomic} constructs with the \kcode{compare} clause.
-In the first \kcode{atomic} construct, the format forms a \plc{conditional update} statement.
-In the second \kcode{atomic} construct the format forms a \plc{conditional expression} statement.
-The ``greater than'' and ``less than'' forms are not available with the Fortran \kcode{compare}
-clause.  One can use the \vcode{max} and \vcode{min} functions with the \kcode{atomic update}
-construct to perform the C/C++ example operations.
+In the first \kcode{atomic} construct, the format forms a \emph{conditional update} statement.
+In the second \kcode{atomic} construct the format forms a \emph{conditional expression} statement.
+The ``greater than'' and ``less than'' forms and 
+the conditional expression form from Fortran 2023
+are available to the \kcode{compare} clause for Fortran in OpenMP 6.0.
+% One can use the \vcode{max} and \vcode{min} functions with the \kcode{atomic update}
+% construct to perform the C/C++ example operations.
 
-\cnexample[5.1]{cas}{1}
-%\ffreeexample[5.1]{cas}{1}
+\cexample[5.1]{cas}{1}
+\ffreeexample[6.0]{cas}{1}
+\clearpage
 
-In OpenMP 5.1 the \kcode{compare} clause was also added to support \emph{Compare And
-Swap} (CAS) semantics. In the following example the \ucode{enqueue} routine
+In OpenMP 5.1 the \kcode{compare} clause with the \kcode{capture} clause
+was added to support \emph{Compare And Swap} (CAS) semantics 
+in C/C++ and extended to Fortran in OpenMP 6.0.
+In the following example, the \ucode{enqueue} routine
 (a naive implementation of a Michael and Scott enqueue function), uses the
-\kcode{compare} clause, with the \kcode{capture} clause, to perform and compare
-(\ucode{q->head == node->next}) and swap (\plc{if-else} assignments) of the
-form: 
+\kcode{compare} with \kcode{capture} clause to perform compare
+(\plc{x == e}) and swap (\plc{if-else} assignments) of the
+form in C/C++: 
 \begin{description}[noitemsep,labelindent=5mm,widest=f90]
-\item \splc{{ r = x == e; if(r) { x = d; } else { v = x; } }}.
+\item \splc{{ r = x == e; if (r) { x = d; } else { v = x; } }}.
 \end{description}
-The example program concurrently enqueues nodes from an array of nodes (\ucode{nodes[N]}).
-Since the equivalence of Fortran pointers can be determined only with a function (such as associated),
-no Fortran version is provided here. The use of the associated function in an \kcode{atomic compare} syntax is
-being considered in a future release.
 
-\cnexample[5.1]{cas}{2}
-%\ffreeexample[5.1]{cas}{2}
-\end{ccppspecific}
+The equivalent form for Fortran pointers is:
+\begin{description}[noitemsep,labelindent=5mm,widest=f90]
+\item \splc{r = associated(x, e); if (r) then; x => d; else; v => x; end if}
+\end{description}
+where the intrinsic function \bcode{associated(\plc{x, e})} is used
+for pointer comparison.
+In the example code, the corresponding variables for ``\plc{x, e, d, v}''
+are C/C++ variables ``\ucode{queue->tail}, \ucode{queue->next}, 
+\ucode{node}, \ucode{node->next}'', 
+or Fortran variables ``\ucode{queue\%tail}, \ucode{queue\%next}, 
+\ucode{node}, \ucode{node\%next}'', respectively.
+The example program concurrently enqueues nodes from an array of nodes
+(\ucode{nodes[N]} or \ucode{nodes(N)}).
+
+\cexample[5.1]{cas}{2}
+\ffreeexample[6.0]{cas}{2}

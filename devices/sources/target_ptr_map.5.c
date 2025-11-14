@@ -5,7 +5,6 @@
 * @@expect:	success
 * @@version:	omp_5.2
 */
-#include <stdio.h>
 #include <stdlib.h>
 #include <omp.h>
 

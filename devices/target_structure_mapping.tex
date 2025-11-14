@@ -1,4 +1,4 @@
-\pagebreak
+%\pagebreak
 \section{Structure Mapping}
 \label{sec:structure_mapping}
 \index{mapping!structure}
@@ -8,79 +8,58 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-In the example below, only structure elements \ucode{S.a}, \ucode{S.b} and \ucode{S.p} 
-of the \ucode{S} structure appear in \kcode{map} clauses of a \kcode{target} construct.
-Only these components have corresponding variables and storage on the device.  
-Hence, the large arrays, \ucode{S.buffera} and \ucode{S.bufferb}, and the \ucode{S.x} component have no storage 
-on the device and cannot be accessed.  
+In the example below, only structure elements \ucode{S.a}, \ucode{S.b} and
+\ucode{S.p} of the \ucode{S} structure appear in \kcode{map} clauses of a
+\kcode{target} construct. Only these components have corresponding variables
+and storage on the device.  Hence, the large arrays, \ucode{S.buffera} and
+\ucode{S.bufferb}, and the \ucode{S.x} component have no storage on the device
+and cannot be accessed.
 
-Also, since the pointer member \ucode{S.p} is used in an array section of a 
-\kcode{map} clause, the array storage of the array section on the device, 
-\ucode{S.p[:N]}, is \plc{attached} to the pointer member \ucode{S.p} on the device.
-Explicitly mapping the pointer member \ucode{S.p} is optional in this case.
+Also, since the pointer member \ucode{S.p} is used in an array section
+(\ucode{S.p[:N]}) of a \kcode{map} clause, the pointer member
+\ucode{S.p} on the device is \emph{attached} to the array storage of
+the array section on the device. Explicitly mapping the pointer member
+\ucode{S.p} is optional in this case.
 
-Note: The buffer arrays and the \ucode{x} variable have been grouped together, so that
-the components that will reside on the device are all together (without gaps).
-This allows the runtime to optimize the transfer and the storage footprint on the device.
+Note: The buffer arrays and the \ucode{x} variable have been grouped together,
+so that the components that will reside on the device are all together (without
+gaps). This allows the runtime to optimize the transfer and the storage
+footprint on the device.
 
 \cexample[5.1]{target_struct_map}{1}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-The following example is a slight modification of the above example for 
-a C++ class.  In the member function \ucode{SAXPY::driver} 
-the array section \ucode{p[:N]} is attached to the pointer member \ucode{p}
-on the device.
- 
+The following example is a slight modification of the above example for a C++
+class.  In the member function \ucode{SAXPY::driver} the pointer member
+\ucode{p} on the device is attached to the array section \ucode{p[:N]} on the
+device.
+
 \cppexample[5.1]{target_struct_map}{2}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%In this example a pointer, \plc{p}, is mapped in a 
-%\code{target data} construct (\code{map(p)}) and remains 
-%persistent throughout the \code{target data} region. The address stored
-%on the host is not assigned to the device pointer variable, and 
-%the device value is not copied back to the host at the end of the
-%region (for a pointer, it is as though \code{map(alloc:p}) is effectively
-%used).  The array section, \plc{p[:N]}, is mapped on both \code{target}
-%constructs, and the pointer \plc{p} on the device is attached at the
-%beginning and detached at the end of the regions to the newly created
-%array section on the device.
-%
-%Also, in the following example the global variable, \plc{a}, becomes 
-%allocated when it is first used on the device in a \code{target} region, 
-%and persists on the device for all target regions.  The value on the
-%device and host may be different, as shown by the print statements.
-%The values may be made consistent with the \code{update} construct,
-%as shown in the \plc{declare\_target.3.c} and \plc{declare\_target.3.f90} 
-%examples.
-%
-%\cexample{target_struct_map}{2}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 The next example shows two ways in which the structure may be
 \emph{incorrectly} mapped.
 
 In Case 1, the array section \ucode{S1.p[:N]} is first mapped in an enclosing
-\kcode{target data} construct, and the \kcode{target} construct then
-implicitly maps the structure \ucode{S1}. The initial map of the array section
-does not map the base pointer \ucode{S1.p} -- it only maps the elements of the
-array section.  Furthermore, the implicit map is not sufficient to ensure
-pointer attachment for the structure member \ucode{S1.p} (refer to the conditions
-for pointer attachment described in Section~\ref{sec:pointer_mapping}).
-Consequentially, the dereference operation \ucode{S1.p[i]} in the call to
-\ucode{saxpyfun} will probably fail because \ucode{S1.p} contains a host address.
+\kcode{target_data} construct, and the \kcode{target} construct then implicitly
+maps the structure \ucode{S1}. The initial map of the array section does not
+map the base pointer \ucode{S1.p} -- it only maps the elements of the array
+section.  Furthermore, the implicit map is not sufficient to ensure pointer
+attachment for the structure member \ucode{S1.p} (refer to the conditions for
+pointer attachment described in Section~\ref{sec:pointer_mapping}).
+Consequentially, the dereference of \ucode{S->p} in the call to
+\ucode{saxpyfun} will probably fail because \ucode{S->p} contains a host
+address.
 
-In Case 2, again an array section is mapped on an enclosing
-\kcode{target data} construct. This time, the nested \kcode{target}
-construct explicitly maps \ucode{S2.p}, \ucode{S2.a}, and \ucode{S2.b}. But as in
-Case 1, this does not satisfy the conditions for pointer attachment since the
-construct must map a list item for which \ucode{S2.p} is a base pointer, and it
-must do so when the \ucode{S2.p} is already present on the device or will be
-created on the device as a result of the same construct.
+In Case 2, again an array section is mapped on an enclosing \kcode{target data}
+construct. This time, the nested \kcode{target} construct explicitly maps
+\ucode{S2.p}, \ucode{S2.a}, and \ucode{S2.b}. But as in Case 1, this does not
+satisfy the conditions for pointer attachment since the construct must map a
+list item for which \ucode{S2.p} is a base pointer, and it must do so when
+\ucode{S2.p} is already present on the device or will be created on the device
+as a result of the same construct.
 
- 
+
 \cexample[5.1]{target_struct_map}{3}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -89,18 +68,18 @@ The following example correctly implements pointer attachment cases that
 involve implicit structure maps.
 
 In Case 1, members \ucode{p}, \ucode{a}, and \ucode{b} of the structure \ucode{S1}
-are explicitly mapped by the \kcode{target data} construct, to avoid
+are explicitly mapped by the \kcode{target_data} construct, to avoid
 mapping parts of \ucode{S1} that aren't required on the device. The mapped
 \ucode{S1.p} is attached to the array section \ucode{S1.p[:N]}, and remains
 attached while it exists on the device (for the duration of
-\kcode{target data} region).  Due to the \ucode{S1} reference inside the
+\kcode{target_data} region).  Due to the \ucode{S1} reference inside the
 nested \kcode{target} construct, the construct implicitly maps \ucode{S1} so that
 the reference refers to the corresponding storage created by the enclosing
-\kcode{target data} region. Note that only the members \ucode{a},
+\kcode{target_data} region. Note that only the members \ucode{a},
 \ucode{b}, and \ucode{p} may be accessed from this storage.
 
 In Case 2, only the storage for the array section \ucode{S2.p[:N]} is mapped
-by the \kcode{target data} construct.  The nested \kcode{target}
+by the \kcode{target_data} construct.  The nested \kcode{target}
 construct explicitly maps \ucode{S2.a} and \ucode{S2.b} and explicitly
 maps an array section for which \ucode{S2.p} is a base pointer. This satisfies
 the conditions for \ucode{S2.p} becoming an attached pointer. The array
@@ -108,9 +87,9 @@ section in this case is zero-length, but the effect would be the same if the
 length was a positive integer less than or equal to \ucode{N}. There is also an
 implicit map of the containing structure \ucode{S2}, again due to the reference
 to \ucode{S2} inside the construct. The effect of this implicit map permits
-access only to members \ucode{a}, \ucode{b}, and \ucode{p}, as for Case 1. 
+access only to members \ucode{a}, \ucode{b}, and \ucode{p}, as for Case 1.
 
-In Case 3, there is no \kcode{target data} construct. The \kcode{target}
+In Case 3, there is no \kcode{target_data} construct. The \kcode{target}
 construct explicitly maps \ucode{S3.a} and \ucode{S3.b} and explicitly
 maps an array section for which \ucode{S3.p} is a base pointer. Again, there is
 an implicit map of the structure referenced in the construct, \ucode{S3}. This

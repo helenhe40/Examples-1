@@ -14,11 +14,11 @@ struct mx_s {
 };
 
 /* prototype functions for combiner and initializer in
-   the declare reduction */
+   the declare_reduction */
 void mx_combine(struct mx_s *out, struct mx_s *in);
 void mx_init(struct mx_s *priv, struct mx_s *orig);
 
-#pragma omp declare reduction(maxloc: struct mx_s) \
+#pragma omp declare_reduction(maxloc: struct mx_s) \
         combiner( mx_combine(&omp_out, &omp_in) )  \
         initializer( mx_init(&omp_priv, &omp_orig) )
 

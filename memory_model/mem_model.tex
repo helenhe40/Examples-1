@@ -18,7 +18,7 @@ see 5 in \ucode{xval}. Otherwise, thread 1 is guaranteed to see 2 in \ucode{xval
 \index{constructs!atomic@\kcode{atomic}}
 The barrier after Print 1 contains implicit flushes on all threads, as well as
 a thread synchronization, so the programmer is guaranteed that the value 5 will
-be printed by both Print 2 and Print 3. Since neither Print 2 or Print 3 are modifying
+be printed by both Print 2 and Print 3. Since neither Print 2 nor Print 3 is modifying
 \ucode{x}, they may concurrently access \ucode{x} without requiring \kcode{atomic}
 directives to avoid a data race.
 
@@ -48,7 +48,7 @@ The next example demonstrates why synchronization is difficult to perform
 correctly through variables. As in the preceding example, the updates to
 \ucode{flag} and the reading of \ucode{flag} in the loops on threads 1 and 2 are
 performed atomically to avoid data races on \ucode{flag}. However, the code still
-contains data race due to the incorrect use of ``flush with a list'' after the
+contains a data race due to the incorrect use of ``flush with a list'' after the
 assignment to \ucode{data1} on thread 1. By not including \ucode{flag} in the
 flush-set of that \kcode{flush} directive, the assignment can be reordered with
 respect to the subsequent atomic update to \ucode{flag}. Consequentially,
@@ -60,15 +60,16 @@ respect to the subsequent atomic update to \ucode{flag}. Consequentially,
 
 
 The following two examples illustrate the ordering properties of 
-the \plc{flush} operation. The \plc{flush} operations are strong flushes 
+the flush operation. The flush operations are strong flushes 
 that are applied to the specified flush lists. 
 However, use of a \kcode{flush} construct with a list is extremely error 
 prone and users are strongly discouraged from attempting it. 
 In the codes the programmer intends to prevent simultaneous 
 execution of the protected section by the two threads.
 The atomic directives in the codes ensure that the accesses to shared
-variables \ucode{a} and \ucode{b} are atomic write and atomic read operations. Otherwise both examples would contain data races and automatically result 
-in unspecified behavior. 
+variables \ucode{a} and \ucode{b} are atomic write and atomic read operations. 
+Otherwise, both examples would contain data races and automatically result 
+in undefined behavior.
 
 In the following incorrect code example, operations on variables \ucode{a} and
 \ucode{b} are not ordered with respect to each other. For instance, nothing

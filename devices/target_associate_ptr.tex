@@ -31,8 +31,6 @@ The explicit mapping of the array section \ucode{arr[ioff:CS]}
 (or \ucode{arr(ioff:ioff+CS-1)} in Fortran) on the \kcode{target}
 construct ensures that the allocated and associated device memory is used 
 when referencing the array \ucode{arr} in the \kcode{target} region.
-The device pointer \ucode{dev_ptr} cannot be accessed directly 
-after a call to the \kcode{omp_target_associate_ptr} routine.
 
 \index{routines!omp_target_disassociate_ptr@\kcode{omp_target_disassociate_ptr}}
 \index{omp_target_disassociate_ptr routine@\kcode{omp_target_disassociate_ptr} routine}

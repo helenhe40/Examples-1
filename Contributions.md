@@ -180,7 +180,7 @@ A partial list:
 - `\scode{}` - OpenMP specifier with special chars, such as '`$`' in "`!$omp`"
 - `\bcode{}` - base language keywords (such as `ASSOCIATE` in Fortran)
 - `\vcode{}` - values of a keyword, such as `TRUE`, `FALSE`, `VERBOSE`
-- `\plc{}` - OpenMP concept, such ICV names; `\splc{}` - escape '_' (underscore)
+- `\plc{}` - placeholder symbol used by the OpenMP specification or Examples document, such as a grammar symbol, ICV name or trait name; `\splc{}` - escape '_' (underscore)
 - `\example{}` - example names, such as `\example{taskloop_reduction.1}`
 - `\docref{}` - chapter or section name of a document, such as the spec
 - `\ucode{}` - program variables, procedure names, or expression in examples codes. Support direct use of '_' (underscore) and ' ' (space).

@@ -12,7 +12,7 @@ module udi
     procedure initPoint, nextPoint
   end type
 
-  !$omp declare induction(next : (Point, real))                  &
+  !$omp declare_induction(next : (Point, real))                  &
   !$omp&        inductor (omp_var = omp_var%nextPoint(omp_step)) &
   !$omp&        collector(omp_step * omp_idx)
 

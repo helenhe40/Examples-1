@@ -4,7 +4,7 @@
 ! @@expect:	success
 ! @@version:	pre_omp_3.0
       program main
-      include 'omp_lib.h'
+      use omp_lib
       integer NT
 
       NT =4

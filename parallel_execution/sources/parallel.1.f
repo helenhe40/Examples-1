@@ -16,7 +16,7 @@
       END SUBROUTINE SUBDOMAIN
 
       SUBROUTINE SUB(X, NPOINTS)
-          INCLUDE "omp_lib.h"     ! or USE OMP_LIB
+          USE OMP_LIB
 
           REAL X(*)
           INTEGER NPOINTS

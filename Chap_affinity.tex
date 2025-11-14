@@ -1,74 +1,59 @@
 \cchapter{OpenMP Affinity}{affinity}
 \label{chap:openmp_affinity}
 
-OpenMP Affinity consists of a \kcode{proc_bind} policy (thread affinity policy) and a specification of
-places (``location units'' or \plc{processors} that may be cores, hardware
-threads, sockets, etc.).  
-OpenMP Affinity enables users to bind computations on specific places.
-The placement will hold for the duration of the parallel region. 
-However, the runtime is free to migrate the OpenMP threads 
-to different cores (hardware threads, sockets, etc.) prescribed within a given place, 
-if two or more cores (hardware threads, sockets, etc.) have been assigned to a given place.
+OpenMP defines \emph{thread affinity} with respect to \emph{places}, where a
+place is an abstraction that represents a set of processors (e.g., one or more
+processor IDs, a hardware thread, a core, a socket, etc.). Thread affinity
+control enables users to assign threads that perform computation in a parallel
+region to specific places, while allowing the runtime implementation to freely
+migrate threads to different execution units within a given place. A thread
+that is assigned to a place for a given parallel region remains bound to that
+place for the duration of that region.
 
-Often the binding can be managed without resorting to explicitly setting places.
-Without the specification of places in the \kcode{OMP_PLACES} variable, 
-the OpenMP runtime will distribute and bind threads using the entire range of processors for 
-the OpenMP program, according to the \kcode{OMP_PROC_BIND} environment variable
-or the \kcode{proc_bind} clause.  When places are specified, the OMP runtime
-binds threads to the places according to a default distribution policy, or
-those specified in the \kcode{OMP_PROC_BIND} environment variable or the
-\kcode{proc_bind} clause.
+The places available for thread affinity control (referred to as a \emph{place
+partition}) can be set via the \kcode{OMP_PLACES} environment variable. The
+binding of threads to places can be managed explicitly or handled implicitly.
+Without the \kcode{OMP_PLACES} variable being set, the initial place partition
+is implementation defined.  The method by which threads are assigned to places
+for a given parallel region is determined by the specified thread affinity
+policy. This policy can be set via the \kcode{OMP_PROC_BIND} environment
+variable or can be explicitly set for a particular \kcode{parallel} construct
+with the \kcode{proc_bind} clause.
 
-In the OpenMP Specifications document a processor refers to an execution unit that
-is enabled for an OpenMP thread to use.  A processor is a core when there is
-no SMT (Simultaneous Multi-Threading) support or SMT is disabled.  When 
-SMT is enabled, a processor is a hardware thread (HW-thread). (This is the
-usual case; but actually, the execution unit is implementation defined.) Processor
-numbers are numbered sequentially from 0 to the number of cores less one (without SMT), or
-0 to the number HW-threads less one (with SMT). OpenMP places use the processor number to designate
-binding locations (unless an ``abstract name'' is used.) 
+The OpenMP specification document defines a \emph{processor} as a hardware
+execution unit on which one or more OpenMP threads may execute. The actual
+hardware mechanism that a given processor ID represents depends on the
+implementation and architecture. For example, a processor could correspond to a
+core on the device that does not have simultaneous multi-threading (SMT)
+support or for which SMT is disabled. While for an SMT-enabled device, a
+processor could correspond to a hardware thread. Processor IDs are the
+resulting sequential numbering of processors, starting from 0. The initial
+place partition can be defined explicitly with processor IDs or using an
+\emph{abstract name}. For example, \pout{OMP_PLACES="\{0,1\},\{2,3\}"}
+defines two places in the initial place partition, the first place consisting
+of processors 0 and 1 from the device and the second place consisting of
+processors 2 and 3 from the device. Alternatively, \pout{OMP_PLACES="cores"}
+defines there to be one place per core on the host device.
 
+The processors that are available to an OpenMP program process may be a subset
+of the processors on the system. This restriction may be the result of a
+wrapper process controlling the execution (such as \ucode{numactl} on Linux
+systems), compiler options, library-specific environment variables, or default
+kernel settings. For instance, the execution of multiple MPI processes, launched
+on a single compute node, will each have a subset of processors as determined
+by the MPI launcher or set by MPI affinity environment variables for the MPI
+library.
 
-The processors available to a process may be a subset of the system's
-processors.  This restriction may be the result of a 
-wrapper process controlling the execution (such as \plc{numactl} on Linux systems), 
-compiler options, library-specific environment variables, or default
-kernel settings.  For instance, the execution of multiple MPI processes,
-launched on a single compute node, will each have a subset of processors as
-determined by the MPI launcher or set by MPI affinity environment 
-variables for the MPI library.  %Forked threads within an MPI process
-%(for a hybrid execution of MPI and OpenMP code) inherit the valid 
-%processor set for execution from the parent process (the initial task region) 
-%when a parallel region forks threads.  The binding policy set in 
-%\code{OMP\_PROC\_BIND} or the \code{proc\_bind} clause will be applied to 
-%the subset of processors available to \plc{the particular} MPI process.
-
-%Also, setting an explicit list of processor numbers in the \code{OMP\_PLACES} 
-%variable before an MPI launch (which involves more than one MPI process) will
-%result in unspecified behavior (and doesn't make sense) because the set of 
-%processors in the places list must not contain processors outside the subset 
-%of processors for an MPI process. A separate \code{OMP\_PLACES} variable must
-%be set for each MPI process, and is usually accomplished by launching a script 
-%which sets \code{OMP\_PLACES} specifically for the MPI process. 
-
-Threads of a team are positioned onto places in a compact manner, a 
-scattered distribution, or onto the primary thread's place, by setting the 
-\kcode{OMP_PROC_BIND} environment variable or the \kcode{proc_bind} clause  to 
-\kcode{close}, \kcode{spread}, or \kcode{primary} (\kcode{master} has been deprecated), respectively.  When 
-\kcode{OMP_PROC_BIND} is set to FALSE no binding is enforced; and 
-when the value is TRUE, the binding is implementation defined to 
-a set of places in the \kcode{OMP_PLACES} variable or to places 
-defined by the implementation if the \kcode{OMP_PLACES} variable 
-is not set. 
-
-The \kcode{OMP_PLACES} variable can also be set to an abstract name 
-(\kcode{threads}, \kcode{cores}, \kcode{sockets}) to specify that a place is
-either a single hardware thread, a core, or a socket, respectively. 
-This description of the \kcode{OMP_PLACES} is most useful when the 
-number of threads is equal to the number of hardware thread, cores
-or sockets.  It can also be used with a \kcode{close} or \kcode{spread} 
-distribution policy when the equality doesn't hold.
-
+The threads that are under affinity control for a given parallel region include
+the threads assigned to its team and additionally any free-agent threads (see
+Section~\ref{sec:free_agent}) that execute tasks bound to the region. Affinity
+control for threads can be disabled (i.e., allowing threads to migrate freely
+across processors) by setting \kcode{OMP_PROC_BIND} to \vcode{false}. If instead
+\kcode{OMP_PROC_BIND} is \vcode{true}, then threads will bind to places but the
+places to which they bind are implementation defined. Finally, three affinity
+policies that are more prescriptive are available via the environment variable
+or the \kcode{proc_bind} clause: \kcode{spread}, \kcode{close}, and
+\kcode{primary}. These are detailed in the following section. 
 
 % We need an example of using sockets, cores and threads:
 

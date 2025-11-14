@@ -11,31 +11,30 @@
 
 #pragma omp begin declare target
   int *p;
-  extern void use_arg_p(int *p, int n);
-  extern void use_global_p(     int n);
+  void use_arg_p(int *p, int n);
+  void use_global_p(int n);
 #pragma omp end declare target
 
 int main()
 {
   int i;
   p = (int *)malloc(sizeof(int)*N);
- 
-  #pragma omp target map(p[:N])  // device p attached to array section
+
+  // device p becomes attached to corresponding p[:N] on device
+  #pragma omp target map(p[:N])
   {
     for (i=0; i<N; i++) p[i] = i;
     use_arg_p(p, N);
     use_global_p(N);
-  }                              // value of host p is preserved
+  } // value of host p is preserved
 
-  printf(" %3.3d %3.3d\n", p[1], p[N-1]); 
-         // 003   297   <- output
+  // prints 3 and 297 for p[1] and p[N-1]
+  printf(" %d %d\n", p[1], p[N-1]);
 
   free(p);
   return 0;
 }
 
-// A #pragma omp begin declare target is optional here
-// because of prototype spec
 void use_arg_p(int *q, int n)
 {
   int i;
@@ -46,10 +45,9 @@ void use_arg_p(int *q, int n)
 void use_global_p(int n)
 {
   int i;
-  for (i=0; i<n; i++)
-    p[i] += i;   // valid since p is in declare target and called from
-                 // inside target region where p was attached to
-                 // valid memory
+  for (i=0; i<n; i++) {
+    // this will access the array section to which
+    // device p was attached on entry to the target region
+    p[i] += i;
+  }
 }
-// A #pragma omp end declare target is optional here
-// because of prototype spec

@@ -1,12 +1,12 @@
 \subsection{User-Defined Reduction}
 \label{subsec:UDR}
 \index{reductions!user-defined}
-\index{reductions!declare reduction directive@\kcode{declare reduction} directive}
-\index{declare reduction directive@\kcode{declare reduction} directive}
-\index{directives!declare reduction@\kcode{declare reduction}}
-\index{declare reduction directive@\kcode{declare reduction} directive!initializer clause@\kcode{initializer} clause}
-\index{declare reduction directive@\kcode{declare reduction} directive!combiner}
-\index{declare reduction directive@\kcode{declare reduction} directive!OpenMP variable identifiers}
+\index{reductions!declare_reduction directive@\kcode{declare_reduction} directive}
+\index{declare_reduction directive@\kcode{declare_reduction} directive}
+\index{directives!declare_reduction@\kcode{declare_reduction}}
+\index{declare_reduction directive@\kcode{declare_reduction} directive!initializer clause@\kcode{initializer} clause}
+\index{declare_reduction directive@\kcode{declare_reduction} directive!combiner}
+\index{declare_reduction directive@\kcode{declare_reduction} directive!OpenMP variable identifiers}
 \index{OpenMP variable identifiers!omp_in@\kcode{omp_in}}
 \index{OpenMP variable identifiers!omp_out@\kcode{omp_out}}
 \index{OpenMP variable identifiers!omp_priv@\kcode{omp_priv}}
@@ -14,19 +14,14 @@
 \index{clauses!initializer@\kcode{initializer}}
 \index{initializer clause@\kcode{initializer} clause}
 
-The \kcode{declare reduction} directive can be used to specify 
+The \kcode{declare_reduction} directive can be used to specify 
 user-defined reductions (UDR) for user data types.
 
-%The following examples show how user-defined reductions can be used to support user data types in the \code{reduction} clause.
-
-%The following example computes the enclosing rectangle of a set of points. The point data structure (\code{struct}~\code{point}) is not supported by the \code{reduction} clause. Using two \code{declare}~\code{reduction} directives we define how a reduction for the point data structure is done for the \plc{min} and \plc{max} operations. Each \code{declare}~\code{reduction} directive calls the appropriate function that passes the two special variables that can be used in the user-defined reduction expression: \code{omp\_in}, which holds one of the two values to reduce, and \code{omp\_out}, which holds the other value and should hold also the result of the reduction once the expression has been executed. Note, also, that when defining the user-defined reduction for \plc{min} we specify how the private variables of each thread are to be initialized (that is, the neutral value). This is not the case for \plc{max} as the default values (that is, zero filling) are already adequate.
-
-
-In the following example, \kcode{declare reduction} directives are used to define
+In the following example, \kcode{declare_reduction} directives are used to define
 \plc{min} and \plc{max} operations for the \ucode{point} data structure for computing
 the rectangle that encloses a set of 2-D points.
 
-Each \kcode{declare reduction} directive defines new reduction identifiers,
+Each \kcode{declare_reduction} directive defines new reduction identifiers,
 \ucode{min} and \ucode{max}, to be used in a \kcode{reduction} clause. The next item in the
 declaration list is the data type (\ucode{struct point}) used in the
 reduction.
@@ -37,7 +32,7 @@ In the function argument list are two special OpenMP variable identifiers, \kcod
 that denote the two values to be combined in the ``real'' function;
 the \kcode{omp_out} identifier indicates which one is to hold the result.
 
-The initializer of the \kcode{declare reduction} directive specifies
+The initializer of the \kcode{declare_reduction} directive specifies
 the initial value for the private variable of each implicit task.
 The \kcode{omp_priv} identifier is used to denote the private variable.
 
@@ -45,7 +40,7 @@ The \kcode{omp_priv} identifier is used to denote the private variable.
 %\clearpage
 
 The following example shows the corresponding code in Fortran. 
-The \kcode{declare reduction} directives are specified as part of 
+The \kcode{declare_reduction} directives are specified as part of 
 the declaration in subroutine \ucode{find_enclosing_rectangle} and 
 the procedures that perform the min and max operations are specified as subprograms.
 
@@ -60,7 +55,7 @@ and \ucode{maxproc} functions we inline the code in a single expression.
 
 The corresponding code of the same example in Fortran is very similar
 except that the assignment expression in the \kcode{combiner} clause for
-the \kcode{declare reduction}
+the \kcode{declare_reduction}
 directive can only be used for a single variable, in this case through
 a type structure constructor \ucode{point($\ldots$)}.
 
@@ -72,7 +67,7 @@ The following example shows the use of special variables in arguments for
 combiner (\kcode{omp_in} and \kcode{omp_out}) and initializer 
 (\kcode{omp_priv} and \kcode{omp_orig}) routines.  This example returns 
 the maximum value of an array and the corresponding index value. The 
-\kcode{declare reduction} directive specifies a user-defined 
+\kcode{declare_reduction} directive specifies a user-defined 
 reduction operation \ucode{maxloc} for data type \ucode{struct mx_s}. 
 The function \ucode{mx_combine} is the combiner and the function \ucode{mx_init} 
 is the initializer.
@@ -80,7 +75,7 @@ is the initializer.
 \cexample[6.0]{udr}{3}
 
 Below is the corresponding Fortran version of the above example.  
-The \kcode{declare reduction} directive specifies the user-defined 
+The \kcode{declare_reduction} directive specifies the user-defined 
 operation \ucode{maxloc} for user-derived type \ucode{mx_s}.  
 The combiner \ucode{mx_combine} and the initializer \ucode{mx_init} are 
 specified as subprograms.
@@ -89,7 +84,7 @@ specified as subprograms.
 
 
 The following example explains a few details of the user-defined reduction 
-in Fortran through modules. The \kcode{declare reduction} directive 
+in Fortran through modules. The \kcode{declare_reduction} directive 
 is declared in a module (\ucode{data_red}). 
 The reduction-identifier \ucode{.add.} is a user-defined operator that is
 to allow accessibility in the scope that performs the reduction
@@ -102,7 +97,7 @@ The reduction identifier \ucode{.add.} is accessible by use association.
 Since \ucode{.add.} is a user-defined operator, the explicit interface
 should also be accessible by use association in the current
 program unit.
-Since the \kcode{declare reduction} associated to this \kcode{reduction} clause
+Since the \kcode{declare_reduction} associated to this \kcode{reduction} clause
 has the \kcode{initializer} clause, the subroutine specified on the clause
 must be accessible in the current scoping unit.  In this case,
 the subroutine \ucode{dt_init} is accessible by use association.
@@ -111,9 +106,9 @@ the subroutine \ucode{dt_init} is accessible by use association.
 
 
 The following example uses user-defined reductions to declare a plus (\kcode{+}) 
-reduction for a C++ class. As the \kcode{declare reduction} directive 
+reduction for a C++ class. As the \kcode{declare_reduction} directive 
 is inside the context of the \ucode{V} class the expressions in the 
-\kcode{declare reduction} directive are resolved in the context of 
+\kcode{declare_reduction} directive are resolved in the context of 
 the class. Also, note that the \kcode{initializer} clause uses a copy 
 constructor to initialize the private variables of the reduction and it uses 
 as parameter to its original variable by using the special variable 
@@ -122,7 +117,7 @@ as parameter to its original variable by using the special variable
 \cppexample[6.0]{udr}{5}
 
 The following examples shows how user-defined reductions can be defined for 
-some STL containers. The first \kcode{declare reduction} defines the 
+some STL containers. The first \kcode{declare_reduction} defines the 
 plus (\kcode{+}) operation for \ucode{std::vector<int>} by making use of the 
 \ucode{std::transform} algorithm. The second and third define the merge (or 
 concatenation) operation for \ucode{std::vector<int>} and \ucode{std::list<int>}. 

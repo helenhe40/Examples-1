@@ -1,45 +1,45 @@
 %\pagebreak
-\section{\kcode{target data} Construct}
+\section{\kcode{target_data} Construct}
 \label{sec:target_data}
 
-\subsection{Simple \kcode{target data} Construct}
+\subsection{Simple \kcode{target_data} Construct}
 \label{subsec:target_data_simple}
-\index{constructs!target data@\kcode{target data}}
-\index{target data construct@\kcode{target data} construct}
+\index{constructs!target_data@\kcode{target_data}}
+\index{target_data construct@\kcode{target_data} construct}
 
-This example shows how the \kcode{target data} construct maps variables 
-to a device data environment. The \kcode{target data} construct creates 
+This example shows how the \kcode{target_data} construct maps variables
+to a device data environment. The \kcode{target_data} construct creates
 a new device data environment and maps the variables \ucode{v1}, \ucode{v2}, and \ucode{p} to the new device 
 data environment. The \kcode{target} construct enclosed in the 
-\kcode{target data} region creates a new device data environment, which inherits the 
+\kcode{target_data} region creates a new device data environment, which inherits the
 variables \ucode{v1}, \ucode{v2}, and \ucode{p} from the enclosing device data environment. The variable 
 \ucode{N} is mapped into the new device data environment from the encountering task's data 
 environment.
 
 \cexample[4.0]{target_data}{1}
 
-\pagebreak
+%\pagebreak
 The Fortran code passes a reference and specifies the extent of the arrays in the 
 declaration. No length information is necessary in the map clause, as is required 
 with C/C++ pointers.
 
 \ffreeexample[4.0]{target_data}{1}
 
-\subsection{\kcode{target data} Region Enclosing Multiple \kcode{target} Regions}
+\subsection{\kcode{target\_data} Region Enclosing Multiple \kcode{target} Regions}
 \label{subsec:target_data_multiregion}
 
-The following examples show how the \kcode{target data} construct maps 
+The following examples show how the \kcode{target_data} construct maps
 variables to a device data environment of a \kcode{target} region. 
-The \kcode{target data} construct creates a device data environment and encloses \kcode{target} 
+The \kcode{target_data} construct creates a device data environment and encloses \kcode{target}
 regions, which have their own device data environments. The device data environment 
-of the \kcode{target data} region is inherited by the device data environment 
-of an enclosed \kcode{target} region. The \kcode{target data} construct 
-is used to create variables that will persist throughout the \kcode{target data} 
+of the \kcode{target_data} region is inherited by the device data environment
+of an enclosed \kcode{target} region. The \kcode{target_data} construct
+is used to create variables that will persist throughout the \kcode{target_data}
 region.
 
 In the following example the variables \ucode{v1} and \ucode{v2} are mapped at each \kcode{target} 
 construct. Instead of mapping the variable \ucode{p} twice, once at each \kcode{target} 
-construct, \ucode{p} is mapped once by the \kcode{target data} construct.
+construct, \ucode{p} is mapped once by the \kcode{target_data} construct.
 
 \cexample[4.0]{target_data}{2}
 
@@ -48,18 +48,18 @@ The Fortran code uses reference and specifies the extent of the \ucode{p}, \ucod
 No length information is necessary in the \kcode{map} clause, as is required with 
 C/C++ pointers. The arrays \ucode{v1} and \ucode{v2} are mapped at each \kcode{target} construct. 
 Instead of mapping the array \ucode{p} twice, once at each target construct, \ucode{p} is mapped 
-once by the \kcode{target data} construct.
+once by the \kcode{target_data} construct.
 
 \ffreeexample[4.0]{target_data}{2}
 
-\index{target data construct@\kcode{target data} construct!map clause@\kcode{map} clause}
+\index{target_data construct@\kcode{target_data} construct!map clause@\kcode{map} clause}
 \index{target construct@\kcode{target} construct!map clause@\kcode{map} clause}
 \index{target construct@\kcode{target} construct!implicit mapping}
 \index{map clause@\kcode{map} clause!tofrom map-type@\kcode{tofrom} map-type}
 In the following example, the array \ucode{Q} is mapped once at the enclosing 
-\kcode{target data} region instead of at each \kcode{target} construct. 
-In OpenMP 4.0, a scalar variable is implicitly mapped with the \kcode{tofrom} map-type.
-But since OpenMP 4.5, a scalar variable, such as the \ucode{tmp} variable, has to be explicitly mapped with 
+\kcode{target_data} region instead of at each \kcode{target} construct.
+In the OpenMP Specification 4.0, a scalar variable is implicitly mapped with the \kcode{tofrom} map-type.
+But since OpenMP Specification 4.5, a scalar variable, such as the \ucode{tmp} variable, has to be explicitly mapped with
 the \kcode{tofrom} map-type at the first \kcode{target} construct in order to return 
 its reduced value from the parallel loop construct to the host.
 The variable defaults to firstprivate at the second \kcode{target} construct.
@@ -68,10 +68,10 @@ The variable defaults to firstprivate at the second \kcode{target} construct.
 
 \ffreeexample[4.0]{target_data}{3}
 
-\subsection{\kcode{target data} Construct with Orphaned Call}
+\subsection{\kcode{target\_data} Construct with Orphaned Call}
 
-The following two examples show how the \kcode{target data} construct 
-maps variables to a device data environment. The \kcode{target data} 
+The following two examples show how the \kcode{target_data} construct
+maps variables to a device data environment. The \kcode{target_data}
 construct's device data environment encloses the \kcode{target} construct's device 
 data environment in the function \ucode{vec_mult()}.
 
@@ -84,7 +84,7 @@ storage location is mapped according to the map-type in the \kcode{map} clause
 (the default map-type is \kcode{tofrom}).
 
 The \kcode{target} construct's device data environment inherits the storage locations 
-of the array sections \ucode{v1[0:N]}, \ucode{v2[:n]}, and \ucode{p0[0:N]} from the enclosing \kcode{target data}
+of the array sections \ucode{v1[0:N]}, \ucode{v2[:n]}, and \ucode{p0[0:N]} from the enclosing \kcode{target_data}
 construct's device data environment. Neither initialization nor assignment is performed 
 for the array sections in the new device data environment.
 
@@ -131,7 +131,7 @@ data environment.
 
 \ffreeexample[4.0]{target_data}{5}
 
-\subsection{\kcode{target data} Construct with \kcode{if} Clause}
+\subsection{\kcode{target\_data} Construct with \kcode{if} Clause}
 \label{subsec:target_data_if}
 \index{target data construct@\kcode{target data} construct!if clause@\kcode{if} clause}
 \index{clauses!if@\kcode{if}}
@@ -185,3 +185,60 @@ variable in the data environment of the task that encountered the \kcode{target 
 
 \ffreeexample[4.0]{target_data}{7}
 
+\subsection{\kcode{target\_data} as a Composite Directive}
+\label{subsec:composite_target_data}
+\index{target_data construct@\kcode{target_data} construct}
+\index{constructs!target_data@\kcode{target_data}}
+\index{directives!target_data@\kcode{target_data}}
+\index{target_data directive@\kcode{target_data} directive}
+
+In the OpenMP Specification 6.0, new semantics were defined for the \kcode{target_data} construct that 
+makes it a task-generating composite construct that has the effect of three task-generating 
+constituent constructs when encountered: \kcode{target_enter_data}, \kcode{task}, and 
+\kcode{target_exit_data}.
+In the example below, the \kcode{target_data} construct is presented with its equivalent 
+task-generating semantics for four different use cases.
+In the four different cases, dependences on \ucode{t_} are used to enforce the ordering of 
+the three tasks generated by the \kcode{target_data} construct.
+
+In Case 1, a \kcode{target} construct with a \kcode{nowait} clause is executed within 
+the \kcode{target_data} region. 
+The semantically equivalent code is shown in Case 1E 
+where the \kcode{target_enter_data} and \kcode{target_exit_data} directives produce 
+the same mapping that is specified by the Case 1 \kcode{target_data} construct.
+The task generated by the middle constituent construct, denoted by \ucode{T1} in Case 1E, 
+is a transparent task and therefore allows dependences to be established between the 
+\kcode{target} construct and the other two constituent constructs.
+The structured block enclosed by the transparent task in Case 1E contains a \kcode{target} construct 
+with the \kcode{nowait} clause, allowing the task \ucode{T2_1} to be deferred. 
+Prior to OpenMP 6.0, the deferred task \ucode{T2_1} would outlive the \kcode{target_data} region;
+in OpenMP 6.0, the implicit taskgroup ensures the completion of \ucode{T2_1} before
+the end of the \kcode{target_data} region.
+The \kcode{target_exit_data} construct is the final constituent construct of the \kcode{target_data} 
+directive and is denoted by \ucode{T3} in Case 1E.  
+
+In Case 2 the \kcode{nogroup} clause is used on the \kcode{target_data} directive.
+Due to the effect of the \kcode{nogroup} clause in Case 2, the \kcode{target} region is not enclosed in 
+a \kcode{taskgroup} in Case 2E. 
+%Moreover, the \kcode{target} directive has to have a \kcode{nowait} in the equivalent code to ensure 
+%that no additional synchronization is added. 
+Prior to OpenMP 6.0, the behavior of Case 1 would be the same as Case 2, 
+allowing the \kcode{target} construct with a \kcode{nowait} to start or continue after the completion of the 
+\kcode{target_data} region.
+
+In Case 3, only \kcode{depend} clause is present on the \kcode{target_data} construct. 
+In Case 3E, identical dependence will appear on all three constituent tasks of the \kcode{target_data} 
+construct.
+Note that the \kcode{depend} clause on the \kcode{target} construct is superfluous 
+due to the implied \kcode{taskgroup} inside the constituent \kcode{task}. Case 4 shows 
+how finer control can be achieved through the use of the \kcode{nogroup} clause.
+
+In Case 4, the \kcode{nogroup}, \kcode{nowait} and \kcode{depend} clauses are present on 
+the \kcode{target_data} construct. 
+In Case 4E, the effect of the \kcode{nogroup} clause eliminates the \kcode{taskgroup} around 
+the \kcode{target} region. 
+The \kcode{nowait} and \kcode{depend} clauses are applied to the constituent directives that 
+accept them. 
+
+\cexample[6.0]{target_data_semantics_new}{1}
+\ffreeexample[6.0]{target_data_semantics_new}{1}

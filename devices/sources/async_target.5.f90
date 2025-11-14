@@ -34,7 +34,7 @@ contains
 
   subroutine update(num)
     integer, intent(inout) :: num
-    !$omp declare target
+    !$omp declare_target
     num = num * 3
   end subroutine update
 

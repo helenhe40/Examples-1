@@ -1,4 +1,4 @@
-%\pagebreak
+\pagebreak
 \begin{fortranspecific}[4ex]
 \section{Fortran Allocatable Array Mapping}
 \label{sec:fort_allocatable_array_mapping}
@@ -19,9 +19,9 @@ and making sure the allocatable variable references the storage.
 
 In Target 3 and 4 sections, allocatable variables are mapped in two
 different ways before they are allocated on the host and subsequently used on the device.
-In one case, a \kcode{target data} construct creates an enclosing region for
+In one case, a \kcode{target_data} construct creates an enclosing region for
 the allocatable variable to persist, and in the other case a
-\kcode{declare target} directive maps the allocation variable for all device executions.
+\kcode{declare_target} directive maps the allocation variable for all device executions.
 In both cases the new array storage is mapped \kcode{tofrom} with the \kcode{always} modifier.
 An explicit map is used here with an \kcode{always} modifier to ensure that the allocatable
 variable status is updated on the device.
@@ -37,9 +37,9 @@ or disassociated status, and associated storage can be mapped and attached as ne
 For allocatable variables, the update of the allocation status to allocated (allowing
 reference to allocated storage) on the device, is similar to pointer attachment.
 
-\topmarker{Fortran}
 \ffreenexample[5.1]{target_fort_allocatable_map}{1}
 
+\topmarker{Fortran}
 Once an allocatable variable has been allocated on the host,
 its allocation status may not be changed in a \kcode{target} region, either
 explicitly or implicitly. The following example illustrates typical
@@ -49,10 +49,9 @@ and allocation) in a \kcode{target} region is not conforming.
 Also, an initial intrinsic assignment of an allocatable variable 
 requires deallocation before the \kcode{target} region ends.
 
-\topmarker{Fortran}
 \ffreenexample[5.1]{target_fort_allocatable_map}{2}
 
-\newpage
+\topmarker{Fortran}
 The next example illustrates a corner case of this restriction (allocatable status
 change in a \kcode{target} region).
 Two allocatable arrays are passed to a subroutine within a \kcode{target}

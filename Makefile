@@ -83,11 +83,11 @@ endif
 ifdef DIFF_FROM
     VC_DIFF_FROM := -r ${DIFF_FROM}
 else
-    VC_DIFF_FROM := -r work_6.0
+    VC_DIFF_FROM := -r work_${version}
 endif
 
 DIFF_TO:=HEAD
-DIFF_FROM:=work_6.0
+DIFF_FROM:=work_${version}
 DIFF_TYPE:=UNDERLINE
 
 COMMON_DIFF_OPTS:=--math-markup=whole  \

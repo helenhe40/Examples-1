@@ -1,15 +1,15 @@
-\pagebreak
-\section{\kcode{declare mapper} Directive}
+%\pagebreak
+\section{\kcode{declare\_mapper} Directive}
 \label{sec:declare_mapper}
-\index{directives!declare mapper@\kcode{declare mapper}}
-\index{declare mapper directive@\kcode{declare mapper} directive}
+\index{directives!declare_mapper@\kcode{declare_mapper}}
+\index{declare_mapper directive@\kcode{declare_mapper} directive}
 
-The following examples show how to use the \kcode{declare mapper}
+The following examples show how to use the \kcode{declare_mapper}
 directive to prescribe a map for later use.
 It is also quite useful for pre-defining partitioned and nested 
 structure elements.
 
-In the first example the \kcode{declare mapper} directive specifies 
+In the first example the \kcode{declare_mapper} directive specifies
 that any structure of type \ucode{myvec_t} for which implicit data-mapping
 rules apply will be mapped according to its \kcode{map} clause.
 The variable \ucode{v} is used for referencing the structure and its 
@@ -21,7 +21,7 @@ storage for data is to be mapped.
 
 Within the main program the \ucode{s} variable is typed as \ucode{myvec_t}.
 Since the variable is found within the \kcode{target} region and the type has a mapping prescribed by
-a \kcode{declare mapper} directive, it will be automatically mapped according to its prescription: 
+a \kcode{declare_mapper} directive, it will be automatically mapped according to its prescription:
 full structure, plus the dynamic storage of the \ucode{data} element. 
 
 %Note: By default the mapping is \kcode{tofrom}. 
@@ -49,13 +49,11 @@ as  \kcode{map(mapper(\ucode{top_id}), tofrom: \ucode{a,b})}
 and \kcode{map(mapper(\ucode{bottom_id}), tofrom: \ucode{a,b})}.
 Each target offload is allowed to execute concurrently on two different devices 
 (\ucode{0} and \ucode{1}) through the \kcode{nowait} clause.
-%The OpenMP 5.1 \kcode{parallel masked} construct creates a region of two threads
-%for these \kcode{target} constructs, with a single thread (\plc{primary}) generator.
 
 The Fortran code uses the \ucode{left_id} and \ucode{right_id} map identifiers in the
 \kcode{map(mapper(\ucode{left_id}),tofrom: \ucode{a,b})} and \kcode{map(mapper(\ucode{right_id}),tofrom: \ucode{a,b})} map clauses.  
 The array sections for these left and right contiguous portions of the matrices 
-were defined previously in the \kcode{declare mapper} directive.
+were defined previously in the \kcode{declare_mapper} directive.
 
 Note, the \ucode{is} and \ucode{ie} scalars are firstprivate 
 by default for a \kcode{target} region, but are declared firstprivate anyway
@@ -69,7 +67,7 @@ to remind the user of important firstprivate data-sharing properties required he
 In the third example \ucode{myvec} structures are
 nested within a \ucode{mypoints} structure. The \ucode{myvec_t} type is mapped
 as in the first example.  Following the \ucode{mypoints} structure declaration, 
-the \ucode{mypoints_t} type is mapped by a \kcode{declare mapper} directive. 
+the \ucode{mypoints_t} type is mapped by a \kcode{declare_mapper} directive.
 For this structure the \ucode{hostonly_data} element will not be mapped;
 also the array section of \ucode{x} (\ucode{v.x[:1]}) and \ucode{x} will be mapped; and
 \ucode{scratch} will be allocated and used as scratch storage on the device.

@@ -2,16 +2,16 @@
 \section{Device Routines}
 \label{sec:device}
 
-\subsection{\kcode{omp_is_initial_device} Routine}
+\subsection{\kcode{omp\_is\_initial\_device} Routine}
 \label{subsec:device_is_initial}
 \index{routines!omp_is_initial_device@\kcode{omp_is_initial_device}}
 \index{omp_is_initial_device routine@\kcode{omp_is_initial_device} routine}
 
-\index{directives!declare target@\kcode{declare target}}
-\index{declare target directive@\kcode{declare target} directive}
+\index{directives!declare_target@\kcode{declare_target}}
+\index{declare_target directive@\kcode{declare_target} directive}
 
-\index{directives!begin declare target@\kcode{begin declare target}}
-\index{begin declare target directive@\kcode{begin declare target} directive}
+\index{directives!begin declare_target@\kcode{begin declare_target}}
+\index{begin declare_target directive@\kcode{begin declare_target} directive}
 
 The following example shows how the \kcode{omp_is_initial_device} runtime library routine 
 can be used to query if a code is executing on the initial host device or on a 
@@ -22,7 +22,7 @@ region based on where the code is executing.
 
 \ffreeexample[4.0]{device}{1}
 
-\subsection{\kcode{omp_get_num_devices} Routine}
+\subsection{\kcode{omp\_get\_num\_devices} Routine}
 \label{subsec:device_num_devices}
 
 The following example shows how the \kcode{omp_get_num_devices} runtime library routine 
@@ -32,8 +32,8 @@ can be used to determine the number of devices.
 
 \ffreeexample[4.0]{device}{2}
 
-\subsection{\kcode{omp_set_default_device} and \\
-\kcode{omp_get_default_device} Routines}
+\subsection{\kcode{omp\_set\_default\_device} and \\
+\kcode{omp\_get\_default\_device} Routines}
 \label{subsec:device_is_set_get_default}
 \index{routines!omp_set_default_device@\kcode{omp_set_default_device}}
 \index{omp_set_default_device routine@\kcode{omp_set_default_device} routine}
@@ -91,8 +91,6 @@ to associate host and device storage with the \kcode{omp_target_associate_ptr} f
 In Section 1 of the code, 40 bytes of storage are allocated on the default device
 with the \kcode{omp_target_alloc} function, which returns a value (of type
 \bcode{C_PTR}) that contains the device address of the storage.
-%A Fortran pointer (\ucode{fp}) is associated by the Fortran \splc{iso_c_binding}
-%\bcode{c_f_pointer} routine with the target of the C pointer (\ucode{cp}).
 In the subsequent \kcode{target} construct, \ucode{cp} is specified on the
 \kcode{is_device_ptr} clause to instruct the compiler that \ucode{cp} is
 a device pointer.
@@ -128,8 +126,9 @@ Keyword arguments are used here for clarity.
 In Section 3, space is allocated (with a Fortran \bcode{ALLOCATE} statement) and initialized using a
 host Fortran pointer (\ucode{h_fp}), and the address of the storage is directly assigned to a
 host C pointer (\ucode{h_cp}).
-The following \kcode{omp_target_is_present} function returns \ucode{0} (\plc{false}, of \bcode{integer(C_INT)} type)
-to indicate that \ucode{h_cp} does not have any corresponding storage on the default device.
+The following \kcode{omp_target_is_present} function returns \ucode{0}
+(\plc{false}, of \bcode{integer(C_INT)} type) to indicate that \ucode{h_cp}
+does not have any corresponding storage on the default device.
 
 Next, the same amount of space is allocated on the default device with
 the \kcode{omp_target_alloc} function, which returns a device pointer (\ucode{d_cp}).

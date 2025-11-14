@@ -19,14 +19,13 @@ a pointer (lvalue expression):
 \item[]\hspace*{5mm}\code{([$s_1$][$s_2$]...[$s_n$])}\plc{pointer}
 \end{description}
 where each $s_i$ is an integral-type expression of positive value.
-The shape-operator can appear in either the \plc{motion-clause}
-of the \kcode{target update} directive or the \kcode{depend} clause.
+The shape-operator can appear in either the \kcode{affinity} clause, the
+\plc{data-motion clause} or the \kcode{depend} clause.
 
 The following example shows the use of the shape-operator in the 
-\kcode{target update} directive. The shape-operator \ucode{([nx][ny+2])}
+\kcode{target_update} directive. The shape-operator \ucode{([nx][ny+2])}
 casts pointer variable \ucode{a} to a 2-dimensional array of size
-%\ucode{nx}$\times$\ucode{(ny+2)}.  The resulting array is then accessed as
-\ucode{nx}*\ucode{(ny+2)}.  The resulting array is then accessed as
+\ucode{nx$\times$(ny+2)}.  The resulting array is then accessed as
 array sections (such as \ucode{[0:nx][1]} and \ucode{[0:nx][ny]}) 
 in the \kcode{from} or \kcode{to} clause for transferring two columns of 
 noncontiguous boundary data from or to the device.  
@@ -43,7 +42,7 @@ The shape operator is not defined for Fortran.  Explicit array shaping
 of procedure arguments can be used instead to achieve a similar goal.
 Below is the Fortran equivalent of the above example that illustrates
 the support of transferring two rows of noncontiguous boundary
-data in the \kcode{target update} directive.
+data in the \kcode{target_update} directive.
  
 \ffreenexample[5.2]{array_shaping}{1}
 \end{fortranspecific}

@@ -3,7 +3,7 @@
 * @@type:	C
 * @@operation:	compile
 * @@expect:	ct-error
-* @@version:	pre_omp_3.0
+* @@version:	omp_4.0
 */
 #include <omp.h>
 int x, y, z[1000];

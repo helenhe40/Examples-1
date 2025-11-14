@@ -592,9 +592,12 @@
    \cnt=#4
    \ifthenelse{ \equal{#5}{0} }{}{\global\advance\cnt by #5}
 
-   \def\cverno{\ref{ex_vtag:\cname}}
+   \ifcsname r@ex_vtag:\cname\endcsname
+     \edef\cverno{\noexpand\ref{ex_vtag:\cname}}
+   \else
+     \def\cverno{#6}
+   \fi
    \ifthenelse{ \equal{\cverno}{pre_3.0} }{\def\cverno{}}{}
-   \ifthenelse{ \equal{\cverno}{??} }{\def\cverno{#6}}{}
    \def\stagcnt{\pageref{ex_vtag:\cname}}
    \ifthenelse{ \equal{\cverno}{} }{
       \global\advance\cnt by 1

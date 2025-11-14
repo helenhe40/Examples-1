@@ -9,12 +9,12 @@
 #include<stdlib.h>
 #include<time.h>
 
-#pragma omp begin declare target
+#pragma omp begin declare_target
 void update(int* num) {
  
     *num = (*num) * 3;
 }
-#pragma omp end declare target
+#pragma omp end declare_target
 
 int main(int argc, char*argv[]){
   int x = 2 ;

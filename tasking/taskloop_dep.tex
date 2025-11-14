@@ -26,10 +26,10 @@ is specified for every 4 loop iterations
 as defined by the \kcode{if} clause that matches with
 the chunk size 4 specified in the \kcode{grainsize} clause for taskloop tasks.
 The dependences are generated only for those iterations where
-the \kcode{if} condition evaluates to \plc{true}.
+the \kcode{if} condition evaluates to \vcode{true}.
 For instance, the first task generated from TL2 will update elements
-\ucode{A[1:4]} with depend clauses \kcode{depend(inout: \ucode{A[4]})} 
-and \kcode{depend(in: \ucode{A[0]})}. This ensures element \ucode{A[4]}
+\ucode{A[1:4]} with the \kcode{depend(inout: \ucode{A[4]})}
+and \kcode{depend(in: \ucode{A[0]})} clauses. This ensures element \ucode{A[4]}
 (thus elements \ucode{A[1:3]}) will be available from TL1 before executing
 the task.
 The last task T3 will wait for the availability of \ucode{A[n-1]}

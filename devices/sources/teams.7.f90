@@ -6,7 +6,7 @@
 PROGRAM main
   USE omp_lib
   INTEGER :: x
-  !$OMP DECLARE TARGET LOCAL(x)
+  !$OMP DECLARE_TARGET LOCAL(x)
 
    x = 128
 
