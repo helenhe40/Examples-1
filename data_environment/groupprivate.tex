@@ -1,0 +1,21 @@
+\section{\kcode{groupprivate} Directive}
+\label{sec:groupprivate}
+\index{directives!groupprivate@\kcode{groupprivate}}
+\index{groupprivate directive@\kcode{groupprivate} directive}
+
+The \kcode{groupprivate} directive introduced in Specification 6.0
+allows specified list items to be replicated such that each contention 
+group will have its own uninitialized copy. The list item is shared among
+threads of the contention group and does not exist 
+outside the scope of the contention group. 
+
+In the following example, the variable \ucode{x} is defined as a static 
+variable and specified with the \kcode{groupprivate} data attribute in 
+the function \ucode{foo}. Four teams created by the \kcode{teams} construct
+execute the \kcode{parallel} region that calls the 
+\ucode{foo} function. For each team the groupprivate variable \ucode{x} 
+is created and is accessible for the group of tasks of the \kcode{parallel} region.
+
+\cppexample[6.0]{groupprivate}{1}
+
+\ffreeexample[6.0]{groupprivate}{1}

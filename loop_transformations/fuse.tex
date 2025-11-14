@@ -1,0 +1,64 @@
+%\pagebreak
+\section{\kcode{fuse} Construct}
+\label{sec:fuse}
+\index{constructs!fuse@\kcode{fuse}}
+\index{fuse construct@\kcode{fuse} construct}
+\index{looprange!full@\kcode{looprange}}
+\index{looprange clause@\kcode{looprange} clause}
+\index{clauses!looprange@\kcode{looprange}}
+
+The \kcode{fuse} construct applies loop fusion to a loop nest sequence, as
+specified by a \kcode{looprange} clause. 
+The first argument of the \kcode{looprange} clause specifies the first 
+loop nest to merge in a sequence of canonical loop nests that follows,
+and the second argument specifies the number of loops to merge.
+Without the \kcode{looprange} clause, the merge applies to the entire sequence.
+
+The effect of fusion is to merge 
+separate iteration spaces of a sequence of loop nests
+into a single iteration space of a single canonical loop
+with an iteration count of the largest loop and the loop blocks
+combined in program order. Other loop transforming constructs
+may be applied to the results of a \kcode{fuse} construct.
+
+Several examples below illustrate the application of the \kcode{fuse} construct
+and show equivalent fused loops that illustrate the functionality of the constructs.
+The equivalent routines may undergo further compiler optimization.
+
+
+In the following example sine and cosine values are created for
+a list of identical values in separate loops.
+By fusing the loops, each iteration of the fused loop calculates
+a sine-cosine pair having the same argument value.
+Under this condition compilers can often calculate the pair
+in significantly less time.
+
+\cexample[6.0]{fuse}{1}
+\ffreeexample[6.0]{fuse}{1}
+
+
+The following example illustrates the fusion of two loops with different lengths.
+Here the fusion merges the two
+separate iteration spaces (\ucode{i} and \ucode{j}) into a single 
+logical iteration space (\ucode{ij})
+with a size of the largest loop, and their loop blocks
+combined with conditionals to avoid 
+execution of out-of-range iterations for the shorter loop.
+The fusion is applied to minimize loop overhead, and possibly use
+the caches more efficiently when the function \ucode{f()} and \ucode{g()} 
+are computed in the same iteration.
+Fusion of different-sized loops works for C++11 range-based for loops.
+
+\cexample[6.0]{fuse}{2}
+\ffreeexample[6.0]{fuse}{2}
+
+In the following example the \kcode{looprange} clause is used to select two loops
+(\ucode{2} in the second argument)
+from the loop nest sequence for fusion into a canonical loop. 
+Loop fusion begins with the second loop (\ucode{2} in the first argument)
+of the loop nest sequence. All the other loops are unaltered.
+
+\cexample[6.0]{fuse}{3}
+\ffreeexample[6.0]{fuse}{3}
+
+

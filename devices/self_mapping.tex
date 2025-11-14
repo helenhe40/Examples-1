@@ -1,0 +1,56 @@
+%\pagebreak
+\section{Self Mapping}
+\label{sec:self_mapping}
+
+\index{self maps}
+
+In general, a map operation may create a separate copy of a list item in a
+device data environment that the runtime implementation must associate with the
+original list item. A \emph{self map} is a map operation that does not result in a
+separate copy of a list item. Rather, the original storage of the list item is
+reused for the device data environment, with the runtime regarding its storage
+as being ``mapped'' to itself.
+
+OpenMP 6.0 adds the \kcode{self} modifier to the \kcode{map} clause to require
+that its list items are mapped using a self map.  The \kcode{self} keyword was
+also added as an argument to the \kcode{defaultmap} clause, indicating that
+variables of a specified category in a \kcode{target} construct are self mapped
+by default. Additionally, the \kcode{self_maps} clause was added to the
+\kcode{requires} directive to require that all map operations in a given
+compilation unit should be self maps. The \kcode{self_maps} clause includes all
+the guarantees provided by the \kcode{unified_shared_memory} requirement clause.
+
+The following C example shows the use of these features when mapping a structure
+type to a device. The self map allows \ucode{start} and \ucode{end} pointer
+data members that point to the start and end of the \ucode{buf} data member to
+be used on the device without requiring pointer attachments.
+
+\cexample[6.0]{self_map}{1}
+
+The next C++ and Fortran example maps a structure for which an array member
+\ucode{buf} is private but may be accessed in the public interface via a
+pointer member \ucode{p}. When mapping the structure to a device, the
+programmer must ordinarily ensure that the \ucode{p} data member on the device
+is attached to the \ucode{buf} data member, by adding a \ucode{my_data.p[:]}
+(for C++) or \ucode{my_data\%p(:)} (for Fortran) list item to a \kcode{map}
+clause. By instead asking for the structure to be self mapped, there is no need
+for the pointer attachment.
+
+\cppexample[6.0]{self_map}{2}
+\ffreeexample[6.0]{self_map}{2}
+
+If the implementation is unable to satisfy the requirements of a self map then
+a runtime error will be issued. This may occur because the original storage is
+not accessible and cannot be made accessible from the device, or it may occur
+because the storage has already been mapped to the device without a self map. A
+third case is that the self map applies to a pointer for which pointer
+attachment is prescribed to a pointee that was not also self mapped. Since a
+self-mapped attached pointer in that case would assign a device address to the
+original pointer which would almost certainly not be the desired behavior.
+
+The following example illustrates each of the three cases above that could
+potentially result in a runtime error due to an unfulfilled self map.
+
+\cexample[6.0]{self_map}{3}
+\ffreeexample[6.0]{self_map}{3}
+

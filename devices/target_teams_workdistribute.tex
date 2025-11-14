@@ -1,0 +1,37 @@
+\begin{fortranspecific}[4ex]
+\section{\kcode{workdistribute} Construct}
+\label{sec:target_teams_workdistribute}
+\index{constructs!workdistribute@\kcode{workdistribute}}
+\index{workdistribute construct@\kcode{workdistribute} construct}
+
+The following examples illustrate the use of the combined \kcode{target teams
+workdistribute} construct to execute and parallelize Fortran array statements on
+a device.  All examples may alternatively be expressed as a \kcode{workdistribute}
+construct closely nested inside a \kcode{target teams} construct.
+
+
+In the following example, \kcode{target teams workdistribute} is used to
+evaluate the \emph{axpy} formula. The individual element-wise operations are
+automatically assigned to the OpenMP threads on the device such that the
+array operations run in parallel across the league of teams.
+
+\ffreenexample{target_teams_workdistribute}{1}
+
+\topmarker{Fortran}
+The next example shows a \kcode{target teams workdistribute} construct that
+contains several array statements. The statements have dependences between
+them and the implementation will ensure that the array statements are exeuted
+in the correct sequence. Therefore, the implementation may introduce additional
+synchronization between the statements or may split the construct into several
+\kcode{target teams} constructs to maintain Fortran semantics.
+
+\ffreenexample{target_teams_workdistribute}{2}
+
+The last example uses \kcode{target teams workdistribute} to perform a more
+complex computation. The computation of \ucode{minval(dd)} may be
+parallelized while the assignment to scalar variable \ucode{f} is performed only by a
+single thread.
+
+\ffreenexample{target_teams_workdistribute}{3}
+
+\end{fortranspecific}

@@ -1,0 +1,90 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usetikzlibrary{decorations} 
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{decorations.text}
+\usetikzlibrary{decorations.pathmorphing}
+\usetikzlibrary{decorations.markings}
+\usetikzlibrary{fit}
+\usetikzlibrary{shadows.blur}
+\usetikzlibrary{arrows}    % Deprecated, use arrows.meta
+\usetikzlibrary{shapes}
+\usetikzlibrary{shadows}
+\usetikzlibrary{automata}
+\usetikzlibrary{positioning}
+\usetikzlibrary{petri}
+\usetikzlibrary{chains}
+\usetikzlibrary{fadings}
+\usetikzlibrary{matrix}
+\usetikzlibrary{patterns}
+\usetikzlibrary{mindmap}
+\usetikzlibrary{graphs}			% TikZ 3.0.0
+\ifluatex
+\usetikzlibrary{graphdrawing}	% TikZ 3.0.0
+\fi
+\usetikzlibrary{quotes}			% TikZ 3.0.0
+\usetikzlibrary{babel}          % Vor polyglossia
+\usetikzlibrary{hobby}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{bending}
+%\usetikzlibrary{overlay-beamer-styles} % aobs-tikz
+%\usetikzlibrary{matrix}
+%
+
+\ifluatex
+\usegdlibrary{trees}			% TikZ 3.0.0
+\usegdlibrary{layered}			% TikZ 3.0.0
+\usegdlibrary{force}			% TikZ 3.0.0
+\usegdlibrary{circular}			% TikZ 3.0.0
+\usegdlibrary{routing}			% TikZ 3.0.0
+\fi
+
+\pgfdeclarelayer{backbackbackground}
+\pgfdeclarelayer{backbackground}
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfdeclarelayer{foreforeground}
+\pgfsetlayers{backbackbackground,backbackground,background,main,foreground,foreforeground}
+\tikzset{>={Stealth[round,flex,length=5pt 4.5 0.8]}} % Standard latex arrow tips are way too small
+\tikzset{tight/.style={minimum width=0pt,minimum height=0pt,inner sep=0pt,outer sep=0pt}}
+\makeatletter
+\tikzset{no shadows/.code=\let\tikz@preactions\pgfutil@empty}
+\makeatother
+\tikzset{invisible/.style={transparent,fill opacity=0,text opacity=0,no shadows}}
+
+
+\begin{document}
+\tikzset{stripe/.style={draw=red,very thick,fill=red!50!white}}
+\def\numx{11} \def\numy{4} \def\stepx{4}
+\begin{tikzpicture}[x={(0.5,0)},y={(0,-0.5)}]
+\foreach \x in {0, ..., \numx}
+    \foreach \y in {0, ..., \numy}
+        \node[anchor=center,shape=circle,minimum width=3mm,minimum height=3mm,draw=black!90,very thick](node-\x-\y) at (\x,\y) {};
+
+\begin{pgfonlayer}{background}
+\foreach \x in {2,6,10}
+  \node[fit={(node-\x-0) (node-\x-\numy)},tight,stripe,opacity=0.1] {};
+\end{pgfonlayer}
+\foreach \x/\xx in {2/6, 6/10}
+    \path (node-\x-0) edge[bend left=40,->,red,opacity=0.2] coordinate[midway] (above-\x) (node-\xx-0);
+\node[above=0mm of above-2,red,opacity=0.2] {3.};
+
+\begin{pgfonlayer}{background}
+\foreach \x in {1,5,9}
+  \node[fit={(node-\x-0) (node-\x-\numy)},tight,stripe,opacity=0.3] {};
+\end{pgfonlayer}
+\foreach \x/\xx in {1/5, 5/9}
+    \path (node-\x-0) edge[bend left=40,->,red,opacity=0.5] coordinate[midway] (above-\x) (node-\xx-0);
+\node[above=0mm of above-1,red,opacity=0.5] {2.};
+
+\begin{pgfonlayer}{background}
+\foreach \x in {0,\stepx,...,\numx}
+  \node[fit={(node-\x-0) (node-\x-\numy)},tight,stripe,opacity=1](stripe-\x) {};
+\end{pgfonlayer}
+\foreach \x/\xx in {0/4, 4/8}
+    \path (node-\x-0) edge[bend left=40,->,red,opacity=1] coordinate[midway] (above-\x) (node-\xx-0);
+\node[above=0mm of above-0,red,opacity=1] {1.};
+\end{tikzpicture}
+\end{document}

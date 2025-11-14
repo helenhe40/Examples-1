@@ -1,0 +1,86 @@
+%\pagebreak
+\section{\kcode{split} Construct}
+\label{sec:split}
+\index{constructs!split@\kcode{split}}
+\index{split construct@\kcode{split} construct}
+
+%\index{counts!full@\kcode{counts}}
+\index{counts clause@\kcode{counts} clause}
+\index{clauses!counts@\kcode{counts}}
+
+\index{OpenMP identifiers!omp_fill@\kcode{omp_fill}}
+\index{omp_fill identifier@\kcode{omp_fill} identifier}
+
+The \kcode{split} construct splits a single canonical loop having an iteration
+count of \plc{n} into
+multiple loops by partitioning the iteration space among \plc{m} loops
+where \plc{m} is the number of arguments in the \kcode{counts} clause.
+For each argument of the \kcode{counts} clause a loop is 
+generated with the number of iterations specified by the argument value.
+The original iteration space is sequentially partitioned among the loops.
+
+The special \kcode{omp_fill} identifier specifies
+the remaining number of iterations after all other iterations have been accounted for.
+That is, the \kcode{omp_fill} value is equal to the total number of iterations less the
+sum of all the other iteration counts.
+
+Examples in this section contain \emph{equivalent}
+routines that illustrate the functionality of the constructs. 
+The equivalent routines may undergo further compiler optimization.
+
+In the following example the \kcode{split} construct splits the loop
+in the \ucode{adder} routine
+into 3 loops of iteration counts \ucode{m}, \ucode{1}, and
+\ucode{n-m-1}, to allow loop iterations to be vectorized in the first and last loops.
+
+    \cexample[6.0]{split}{1}
+\ffreeexample[6.0]{split}{1}
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The next example illustrates the concerted application
+of two loop-transforming constructs (\kcode{split} and \kcode{fuse})
+on a single loop. The \kcode{split} construct splits the iteration
+space among three loops with the \kcode{counts(omp_fill,\ucode{n},\ucode{n})} clause,
+with iterations counts of \ucode{1}, \ucode{n} and \ucode{n}. This effectively removes the
+dependence introduced by the \ucode{if(...)} conditional, and generates
+two loops spanning the next \ucode{n} iterations and the following \ucode{n} iterations.
+The \kcode{fuse} construct combines the latter two
+loops, so that the two element-updates in each iteration are to the same
+position in the array. The fusion increases memory locality.
+
+    \cexample[6.0]{split}{2}
+\ffreeexample[6.0]{split}{2}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The next example illustrates splitting a loop between a host and a device,
+% with the assistance of the \kcode{apply} clause.
+% A loop with an iteration count \ucode{n} is split into two loops of \ucode{m} and 
+% \ucode{n-m} counts by the \kcode{counts(\ucode{m},omp_fill)} clause. The
+% \kcode{apply} clause specifies that the \kcode{target}~\kcode{loop} offloading
+% directive is applied to the first loop, and the \kcode{parallel do|for}
+% directive is applied to the second loop for execution on the host.
+% 
+% %The \ucode{split_composable_equivalent} routine shows a simple 
+% %semantic equivalent of the \kcode{split} construct implementation.
+% 
+%     \cexample[6.0]{split}{3}
+% \ffreeexample[6.0]{split}{3}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The final example of this section illustrates splitting a loop to
+% run across different offload devices.
+% The \kcode{counts(n/2,omp_fill)} clause splits the n-iteration loop
+% into two loops having \kcode{n/2} and \kcode{n-n/2} iterations.
+% The \kcode{apply} clause applies the \kcode{target loop}
+% directive, and specifies
+% two different devices, \ucode{device(0)} and \ucode{devices(1)}
+% for execution of the two loops.
+% 
+% The \ucode{split_composable_equivalent} routine shows a simple 
+% semantic equivalent of the \kcode{split} construct implementation.
+% 
+% !!! NEEDS a wait (is auto mapping ok?)
+% 
+%     \cexample[6.0]{split}{4}
+% \ffreeexample[6.0]{split}{4}

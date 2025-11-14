@@ -1,0 +1,48 @@
+%\pagebreak
+\section{\kcode{safesync} Clause}
+\label{sec:safesync}
+
+\index{clauses!safesync@\kcode{safesync}}
+\index{safesync clause@\kcode{safesync} clause}
+
+Parallel regions in OpenMP are usually executed by a team of threads that
+should be able to freely take \emph{divergent code paths} and synchronize with
+each other using various point-to-point synchronization mechanisms. However, on
+certain target architectures in which OpenMP threads may instead execute a
+single stream of (possibly predicated) instructions in lock step, two threads
+may not be able to synchronize with each other from logically divergent code
+without a resulting deadlock. The \kcode{safesync(\plc{width})} clause may be
+specified on a \kcode{parallel} construct to control which threads in a team
+should be able to synchronize with each other from divergent code paths. The
+effect is that the team is partitioned into ``progress groups'' of consecutive
+threads (in terms of thread number) of size \plc{width}, except for the final
+group which can have less than \plc{width} threads. Threads in the same
+progress group may execute a single sequence of instructions, while threads in
+different progress groups will execute distinct sequences of instructions. Thus,
+two threads in different progress groups can safely synchronize from divergent
+code paths.
+
+If the \kcode{safesync} clause isn't present the behavior is as if the
+\plc{width} is 1 for a \kcode{parallel} construct encountered on the host
+device or when the \kcode{device_safesync} requirement has been specified for
+that compilation unit. In other words, any two threads in the team can
+synchronize from divergent code paths by default under those conditions.
+
+The following example uses a ticket lock implementation in a \kcode{target}
+region that requires thread synchronization from divergent code paths. Under
+the progress guarantees for threads that are defined in the 6.0 specification,
+this code can deadlock without an explicit use of the \kcode{safesync} clause
+when executing on a non-host device. For example, on an NVIDIA GPU, the
+implementation may map threads in the team to individual GPU threads in a warp
+which does not support such synchronization between divergent threads. To make
+this work, the \kcode{safesync} clause (with the omitted \plc{width}
+defaulting to 1) can be specified. The example includes two variants of a
+\kcode{parallel} directive, one with a \kcode{safesync} clause and one without,
+via a metadirective that is conditioned on whether the device is a host device
+or non-host device. Alternatively, the \kcode{device_safesync} requirement
+could be specified with a \kcode{requires} directive, and this would require
+\kcode{safesync} behavior as a default even on a non-host device.
+
+\cexample[6.0]{safesync}{1}
+\ffreeexample[6.0]{safesync}{1}
+

@@ -1,0 +1,123 @@
+\section{\kcode{taskgraph} Construct}
+
+\label{sec:taskgraph}
+\index{taskgraph construct@\kcode{taskgraph} construct}
+\index{constructs!taskgraph@\kcode{taskgraph}}
+\index{clauses!graph_id@\kcode{graph_id}}
+\index{clauses!replayable@\kcode{replayable}}
+\index{saved modifier@\kcode{saved} modifier}
+\index{firstprivate clause@\kcode{firstprivate} clause!save modifier@\kcode{saved} modifier}
+
+A taskgraph record represents a collection of tasks and their dependences
+produced by a recorded sequence of task-generating constructs encountered
+during the execution of a \kcode{taskgraph} construct, optionally identified by
+a graph ID specified in a \kcode{graph_id} clause. While executing a region
+corresponding to a \kcode{taskgraph} construct, the implementation may record
+encountered task-generating constructs that are designated as replayable into a
+taskgraph record. When a \kcode{taskgraph} construct is encountered and a
+taskgraph record associated with the construct exists that matches any
+specified graph ID), the implementation will execute from the taskgraph record
+instead (referred to as a replay execution). 
+
+In general, the \kcode{replayable} clause determines whether a task-generating
+construct is replayable or not. But if the \kcode{replayable} clause is not
+present on a task-generating construct that is lexically enclosed in a
+\kcode{taskgraph} construct and is encountered during execution of the
+\kcode{taskgraph} region (so, not during execution of another task generated
+from the \kcode{taskgraph} region), then that construct is still considered
+replayable.
+
+Replay executions can provide some performance savings, as an implementation
+can avoid setup code for task-generating constructs and identifying task
+dependences. When executing from a taskgraph record, the implementation will
+typically use the current enclosing data environment of the \kcode{taskgraph}
+construct for variables in a variable list or locator list. Exceptions to this
+are:
+
+\begin{itemize}
+\item For the \kcode{depend} clause, the storage locations are recorded and
+      reused for replay executions.
+
+\item For variable or locator list items that are composed of a base variable and
+      various other expressions (e.g., an array element or array section), the
+        values of the expressions are recorded and reused for replay execution.
+
+\item If the \kcode{saved} modifier is present, a recorded copy of the variable
+      in the taskgraph record is used.
+\end{itemize}
+
+In the following example, a \kcode{taskgraph} construct is used to allow the
+implementation to produce a simple taskgraph record for replay execution.
+Inside the construct, there are 3 \kcode{task} constructs that generate tasks
+\plc{A}, \plc{B}, \plc{C}, respectively, where task \plc{C} is dependent on
+tasks \plc{A} and \plc{B}. The tasks use the shared variables \ucode{x},
+\ucode{y}, \ucode{z}, \ucode{sums}, and \ucode{i} from the data environment
+that encloses the \kcode{taskgraph} construct. Given that \ucode{x}, \ucode{y},
+\ucode{z}, and \ucode{sums} have static storage, the implementation can assume
+it always comes from the same locations in memory for any replay execution of
+the taskgraph record.
+
+\cexample[6.0]{taskgraph}{1}
+
+\ffreeexample[6.0]{taskgraph}{1}
+
+The next example is a slight modification of the first one. The variables
+\ucode{x}, \ucode{y}, and \ucode{z} are still shared in the recorded
+\kcode{task} constructs, but now no longer have static storage as they are
+declared local to the \ucode{do_parallel_work} procedure. The implementation
+must take care of recapturing the addresses of the non-static \ucode{x},
+\ucode{y}, and \ucode{z} prior to a replay execution of the taskgraph record
+rather that referring to the storage of \ucode{x}, \ucode{y}, and \ucode{z}
+from when the taskgraph record was created (which would no longer exist in the
+replay executions).
+
+\cexample[6.0]{taskgraph}{2}
+
+\ffreeexample[6.0]{taskgraph}{2}
+
+The next example again modifies the first one. Now, variables \ucode{x},
+\ucode{y}, and \ucode{z} are declared as pointers to arrays declared in the
+same scope in a procedure \ucode{exec_taskgraph}, which is called from the
+\kcode{parallel} region. Consequentially, they are treated as firstprivate in
+the recorded \kcode{task} constructs of the taskgraph record. During a replay
+execution, firstprivate copies of these variables must be initialized from the
+variables in the enclosing data environment of the current \kcode{taskgraph}
+region. So, just as with the preceding example, the implementation must
+recapture the addresses of the \ucode{x}, \ucode{y}, and \ucode{z} pointers
+prior to a replay execution of the taskgraph record so that the firstprivate
+copies are initialized by reading the pointers at the correct storage locations.
+
+\cexample[6.0]{taskgraph}{3}
+
+\ffreeexample[6.0]{taskgraph}{3}
+
+The next example is much like the first one, except that \ucode{x}, \ucode{y},
+and \ucode{z} are now static lifetime variables that are declared in the
+\kcode{taskgraph} construct itself. They are shared in the recorded
+\kcode{task} constructs, and as in the first example the implementation can
+simply refer to their static storage without requiring an address recapture for
+each subsequent replay execution.
+
+\cexample[6.0]{taskgraph}{4}
+
+\ffreeexample[6.0]{taskgraph}{4}
+
+In the next example, \ucode{x}, \ucode{y}, and \ucode{z} are pointers into
+\ucode{NG$\times$N} arrays, and the OpenMP implementation is directed to
+create up to \ucode{NG} taskgraph records for replay execution. The pointers
+\ucode{x}, \ucode{y}, and \ucode{z} are expected to point to the same array
+slices for all replay executions of a given taskgraph record. The
+\kcode{graph_id} clause specifies that the scalar integer \ucode{input_index},
+which can have a value of 0 up to \ucode{NG}-1, is to be used as the graph ID.
+Additionally, since the pointers \ucode{x}, \ucode{y}, and \ucode{z} don't
+change for replay executions of a given taskgraph record, the example makes
+them firstprivate in the recorded \kcode{task} constructs, and the use of the
+\kcode{saved} modifier directs the implementation to initialize the
+firstprivate copy from a value saved with the recorded \kcode{task} construct
+in the taskgraph record. Note that if the \kcode{parallel masked} construct was
+hoisted outside the \ucode{do_parallel_work} procedure and instead enclosed the
+call, the behavior would remain the same.
+
+\cexample[6.0]{taskgraph}{5}
+
+\ffreeexample[6.0]{taskgraph}{5}

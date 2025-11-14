@@ -1,0 +1,251 @@
+%\pagebreak
+\section{Compound Directive Names}
+\label{sec:compound}
+\index{directive syntax!compound directive names}
+\index{compound construct names}
+\index{directive-name-modifier}
+
+\index{compound construct@compound construct}
+\index{compound construct@compound construct!combined construct@combined construct}
+\index{compound construct@compound construct!composite construct@composite construct}
+\index{compound directive names@compound directive names}
+\index{compound directive names@compound directive names!leaf directive names@leaf directive name}
+\index{compound directive names@compound directive names!constituent directive names@constituent directive name}
+
+\index{construct properties@construct properties}
+\index{construct properties@construct properties!parallelism-generating@parallelism-generating}
+\index{construct properties@construct properties!thread-selecting@thread-selecting}
+\index{construct properties@construct properties!partitioned@partitioned}
+
+\index{clause properties@clause properties}
+\index{clause properties@clause properties!all-constituents@all-constituents}
+\index{clause properties@clause properties!outermost-leaf@outermost-leaf}
+\index{clause properties@clause properties!innermost-leaf@innermost-leaf}
+\index{clause properties@clause properties!all-privatizing@all-privatizing}
+\index{clause properties@clause properties!once-for-all-constituents@once-for-all-constituents}
+
+%%%%%%%%%%%%%%%%%
+
+OpenMP directives can be classified as either \emph{leaf directives} or
+\emph{compound directives}. Leaf directives are directives for which the
+semantics are not defined in terms of other directives, while compound
+directives are directives for which the semantics are defined in terms of
+other directives, ultimately including the semantics of two or more leaf
+directives. Compound directives may be further classified as either
+\emph{combined directives} or \emph{composite directives}.
+
+A combined directive is always expressed as a concatenation of two directive names,
+\plc{directive-name-A} and \plc{directive-name-B}.
+The first left-most directive name that appears in the directive is
+\plc{directive-name-A},  and the remainder of the combined directive
+name is \plc{directive-name-B}.  The semantics of a combined directive is
+as if a construct formed by \plc{directive-name-A} immediately encloses
+a construct formed by \plc{directive-name-B}.  An example of a
+combined directive is \kcode{target teams loop}, which has the behavior of a
+\kcode{target} construct that immediately encloses a \kcode{teams loop}
+construct, and where the leaf directives are \kcode{target}, \kcode{teams}, and
+\kcode{loop}.
+
+A composite directive is any compound directive that is not combined. In
+particular, it's not the case that the directive name can be split into a
+\plc{directive-name-A} and \plc{directive-name-B}, such that the semantics are
+a construct formed by \plc{directive-name-A} immediately enclosing a construct
+formed by \plc{directive-name-B}. Usually, composite directives are also
+expressed as a concatenation of two or more directive names, each explicitly
+naming one of its leaf directives, where the first leaf directive name is
+\plc{directive-name-A} and the remaining leaf directive names constitute
+\plc{directive-name-B}. In general, such composite directives are
+loop-associated, and the semantics are such that \plc{directive-name-A} forms a
+loop-associated construct for which the loop body is a loop-associated
+construct formed by \plc{directive-name-B}. An example of such a composite
+directive is \kcode{distribute simd}, which has the behavior of a
+\kcode{distribute} construct for which the loop body is a \kcode{simd}
+construct, and where the leaf directives are \kcode{distribute} and
+\kcode{simd}. Note that this is different than the \kcode{distribute} construct
+immediately enclosing a \kcode{simd} construct, which in fact would not be
+conforming OpenMP code. There are also composite directives that are not
+expressed as a concatenation of two or more directive names, but nevertheless
+include the semantics of two or more leaf directives. The \kcode{target_data}
+directive is such a directive, entailing the semantics of a
+\kcode{target_enter_data} construct, a \kcode{task} construct, and a
+\kcode{target_exit_data} construct that are executed in sequence.
+
+All OpenMP directives have one or more constituent directives.
+If the OpenMP directive is not a compound directive (i.e., it is a leaf
+directive) then it has only one constituent directive -- itself. Otherwise, for
+a compound directive, the constituent directives include each of its leaf
+directives and any directive that can be formed from a concatenation of
+consecutive directive names that appear in the compound directive name. For
+example, the constituent directives of a \kcode{target teams loop} directive
+are: \kcode{target}, \kcode{teams}, \kcode{loop}, \kcode{target teams},
+\kcode{teams loop}, and finally \kcode{target teams loop}. As another example,
+the constituent directives of \kcode{target_data parallel loop} are:
+\kcode{target_enter_data}, \kcode{task}, \kcode{target_exit_data},
+\kcode{parallel}, \kcode{loop}, \kcode{target_data}, \kcode{target_data
+parallel}, \kcode{parallel loop}, and finally \kcode{target_data parallel
+loop}.
+
+By default, clauses specified on a compound directive apply to the
+individual leaf directives according to certain properties they may have:
+\begin{itemize}
+\item \plc{innermost-leaf} property: The clause only applies to the innermost
+      resulting leaf construct that accepts the clause, though it may yield
+      additional semantics for other leaf constructs. Examples:
+      \kcode{private} and \kcode{linear} clauses.
+\item \plc{outermost-leaf} property: The clause only applies to the outermost
+      resulting leaf construct that accepts the clause. Examples:
+      \kcode{nowait} and \kcode{nogroup} clauses.
+\item \plc{all-privatizing} property: The clause only applies to those
+      resulting leaf constructs to which a privatization clause is applied.
+      Example: \kcode{allocate} clause.
+\item \plc{once-for-all-constituents} property: The clause applies once for the
+      most all-encompassing constituent construct. Example: \kcode{collapse}
+      clause, which for a \kcode{target parallel for simd} directive would
+      have the effect of collapsing the associated loop nest once for the
+      \kcode{parallel for simd} constituent construct.
+\item \plc{all-constituents} property: The clause applies to all
+      resulting leaf constructs that accept the clause. This is the default
+      property for a clause that does not have one of the above properties.
+\end{itemize}
+
+The OpenMP specification defines a grammar and various restrictions for
+compound directive names that are composed of two or more explicitly named
+constituent directive names. The grammar allows for a handleful of such
+directive names that are composite, and additionally permits two directive
+names to be concatenated into a combined directive name according to the
+following rules:
+
+\begin{itemize}
+\item the first named directive (\plc{directive-name-A}) consists of only one
+      explicitly named constituent directive that is either
+      parallelism-generating or thread-selecting;
+\item the second named directive (\plc{directive-name-B}) is the name of a
+      parallelism-generating, thread-selecting, or partitioned directive, or any
+      compound directive for which its \plc{directive-name-A} is such a
+      directive.
+\end{itemize}
+
+For example, consider the directive \kcode{masked target teams distribute
+simd}, which conforms to the above rules as shown in the following diagram:
+
+\begin{Verbatim}[fontsize=\footnotesize]
+
+    masked target teams distribute simd (combined)
+          ______________|_____________
+         |                            |
+   A: masked       B: target teams distribute simd (combined)
+(thread-selecting)        ________|__________________
+                         |                           |
+                     A: target            B: teams distribute simd (combined)
+                 (parallelism-generating)  __________|____________
+                                          |                       |
+                                       A: teams         B: distribute simd (composite)
+                               (parallelism-generating)    _______|_______
+                                                          |               |
+                                                     A: distribute      B: simd
+                                                     (partitioned)
+
+\end{Verbatim}
+
+In contrast, the directive \kcode{parallel atomic} would not be conforming,
+because \kcode{atomic} is not a permitted \plc{directive-name-B} according to
+the above rules. For more details on the grammar and associated restrictions,
+please refer to the \docref{Compound Directive Names} section of the OpenMP
+specification.
+
+The following example attempts to make use of various invalid compound
+directives that are supported by the grammar but violate one of the
+associated restrictions.
+
+The \kcode{parallel target parallel} directive is invalid due to a restriction
+that a compound directive cannot have multiple leaf directives with the same
+name, such as repeated \kcode{parallel}. This avoids ambiguity when specifying a
+particular leaf directive to which a clause should be applied with the
+\plc{directive-name-modifier}. The \kcode{teams target} directive is invalid
+due a restriction that a combined directive name must specify an inner
+construct formed by \plc{directive-name-B} that may be immediately nested
+inside an outer construct formed by \plc{directive-name-A}. Since a
+\kcode{target} construct may not be nested inside a \kcode{teams} construct,
+the combined directive is disallowed. The \kcode{teams sections} and
+\kcode{teams masked} directives are both invalid due to a restriction that
+worksharing and thread-selecting directive names may only combined with a
+\kcode{parallel} \plc{directive-name-A}. Generally speaking, any other
+\plc{directive-name-A} would not form a useful combined consruct. The
+\kcode{target_data parallel target} directive is invalid due to a restriction
+that at most one constituent construct may be map-entering (or map-exiting),
+and here the \kcode{target_data} and \kcode{target} constituent constructs are
+both map-entering and map-exiting. Finally, the \kcode{task taskloop} directive
+is invalid due to a restriction that two task-generating constructs may not be
+combined if they generate explicit tasks that bind to the same parallel region.
+
+\cexample[6.0]{invalid_compound_names}{1}
+\ffreeexample[6.0]{invalid_compound_names}{1}
+
+In the following example, each loop-nest-associated directive is a compound
+directive that applies different parallelization semantics according to its
+constituent directives.
+
+In the first construct of the \ucode{component_names} procedure, the directive
+\kcode{parallel for} (or \kcode{parallel do}) forms a combined construct that
+is equivalent to a \kcode{parallel} construct (a parallelism-generating
+construct) that immediately encloses a \kcode{for} (or \kcode{do}) construct
+(a partitioned construct).
+
+In the second construct of the procedure, the directive \kcode{parallel for
+simd} (or \kcode{parallel do simd}) forms a combined construct that is
+equivalent to a \kcode{parallel} construct (a parallelism-generating
+construct) that immediately encloses a \kcode{for simd} (or \kcode{do simd})
+composite construct (where the first named leaf directive is partitioned).
+
+In the third construct of the procedure, the directive \kcode{parallel masked
+taskloop} forms a combined construct that is equivalent to a \kcode{parallel}
+construct (a parallelism-generating construct) that immediately encloses
+a \kcode{masked taskloop} combined construct. That combined construct, in turn,
+is equivalent to a \kcode{masked} construct (a thread-selecting
+construct) that immediately encloses a \kcode{taskloop} construct (a
+parallelism-generating construct).
+
+For the fourth construct of the procedure, the directive \kcode{target teams
+distribute parallel for} (or \kcode{target teams distribute parallel do}) forms
+a combined construct that is equivalent to a \kcode{target} construct (a
+parallelism-generating construct) that immediately encloses a \kcode{teams
+distribute parallel for} (or \kcode{teams distribute parallel do}) combined
+construct. That combined construct, in turn, is equivalent to a \kcode{teams}
+construct (a parallelism-generating construct) that immediately encloses
+a \kcode{distribute parallel for} (or \kcode{distribute parallel do}) composite
+construct (where the first named leaf directive is partitioned).
+
+\cexample[6.0]{compound_names}{1}
+\ffreeexample[6.0]{compound_names}{1}
+
+In general, OpenMP permits the clause properties described earlier in this
+section to be overridden for any clause with the use of a
+\plc{directive-name-modifier} (prior to OpenMP 6.0, this modifier was only
+permitted in the \kcode{if} clause). The modifier can name any constituent
+directive of the directive on which it appears. For example, a
+\kcode{private(parallel: x)} clause on a \kcode{parallel loop} directive would
+apply the \kcode{private} clause to the \kcode{parallel} directive rather than
+the default behavior of applying it to the \kcode{loop} directive due to the
+innermost-leaf property.
+
+In the next example, the first three constructs of the
+\ucode{conditional_parallel} procedure apply an \kcode{if} clause to the
+\kcode{parallel} construct in three different ways: one without a
+\plc{directive-name-modifier} and the other two with
+\plc{directive-name-modifiers} (one specifying a leaf directive name and the
+other specifying a constituent compound directive name). Without the modifier,
+the \kcode{if} clause applies to all the constituent directives that accept the
+\kcode{if} clause (only the \kcode{parallel} here). With the \kcode{parallel}
+\plc{directive-name-modifier}, it applies explicitly to only the
+\kcode{parallel} directive. With \kcode{parallel for} (or \kcode{parallel do})
+\plc{directive-name-modifier}, it applies explicitly to the \kcode{parallel
+for} (or \kcode{parallel do}) directive, which has the effect of applying only
+to the \kcode{parallel} leaf directive.
+
+In the last construct of the procedure, the \plc{directive-name-modifier} specifies
+that the \kcode{if} clause should only apply to the \kcode{taskloop simd}
+constituent directive. This has the effect of applying the \kcode{if} clause to
+the \kcode{taskloop} and \kcode{simd} leaf directives.
+
+\cexample[6.0]{directive_name_modifier}{1}
+\ffreeexample[6.0]{directive_name_modifier}{1}
